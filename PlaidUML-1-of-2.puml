@@ -1,0 +1,782 @@
+@startuml
+
+class ItemGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemGetRequest -- APIClientID  :  client_id
+ItemGetRequest -- APISecret  :  secret
+ItemGetRequest -- AccessToken  :  access_token
+
+class ItemGetResponse {
+  item * : Item
+  status  : ItemStatusNullable
+  request_id * : RequestID
+
+}
+ItemGetResponse -- Item  :  item
+ItemGetResponse -- ItemStatusNullable  :  status
+ItemGetResponse -- RequestID  :  request_id
+
+class AuthGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : AuthGetRequestOptions
+
+}
+AuthGetRequest -- APIClientID  :  client_id
+AuthGetRequest -- APISecret  :  secret
+AuthGetRequest -- AccessToken  :  access_token
+AuthGetRequest -- AuthGetRequestOptions  :  options
+
+class AuthGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class AuthGetResponse {
+  accounts * : array[] of AccountBase
+  numbers * : AuthGetNumbers
+  item * : Item
+  request_id * : RequestID
+
+}
+AuthGetResponse *-- AccountBase  :  accounts
+AuthGetResponse -- AuthGetNumbers  :  numbers
+AuthGetResponse -- Item  :  item
+AuthGetResponse -- RequestID  :  request_id
+
+class AuthGetNumbers {
+  ach * : array[] of NumbersACH
+
+}
+AuthGetNumbers *-- NumbersACH  :  ach
+
+class TransactionsGetRequest {
+  client_id  : APIClientID
+  options  : TransactionsGetRequestOptions
+  access_token * : AccessToken
+  secret  : APISecret
+  start_date * : date
+  end_date * : date
+
+}
+TransactionsGetRequest -- APIClientID  :  client_id
+TransactionsGetRequest -- TransactionsGetRequestOptions  :  options
+TransactionsGetRequest -- AccessToken  :  access_token
+TransactionsGetRequest -- APISecret  :  secret
+
+class TransactionsGetRequestOptions {
+  account_ids  : array[] of strings
+  count  : integer
+  offset  : integer
+  include_original_description  : boolean
+  include_personal_finance_category_beta  : boolean
+
+}
+
+class TransactionsGetResponse {
+  accounts * : array[] of AccountBase
+  transactions * : array[] of Transaction
+  total_transactions * : integer
+  item * : Item
+  request_id * : RequestID
+
+}
+TransactionsGetResponse *-- AccountBase  :  accounts
+TransactionsGetResponse *-- Transaction  :  transactions
+TransactionsGetResponse -- Item  :  item
+TransactionsGetResponse -- RequestID  :  request_id
+
+class TransactionsRefreshRequest {
+  client_id  : APIClientID
+  access_token * : AccessToken
+  secret  : APISecret
+
+}
+TransactionsRefreshRequest -- APIClientID  :  client_id
+TransactionsRefreshRequest -- AccessToken  :  access_token
+TransactionsRefreshRequest -- APISecret  :  secret
+
+class TransactionsRefreshResponse {
+  request_id * : RequestID
+
+}
+TransactionsRefreshResponse -- RequestID  :  request_id
+
+class TransactionsRecurringGetRequest {
+  client_id  : APIClientID
+  access_token * : AccessToken
+  secret  : APISecret
+  account_ids * : array[] of strings
+
+}
+TransactionsRecurringGetRequest -- APIClientID  :  client_id
+TransactionsRecurringGetRequest -- AccessToken  :  access_token
+TransactionsRecurringGetRequest -- APISecret  :  secret
+
+class TransactionsRecurringGetResponse {
+  inflow_streams * : array[] of TransactionStream
+  outflow_streams * : array[] of TransactionStream
+  request_id * : RequestID
+
+}
+TransactionsRecurringGetResponse *-- TransactionStream  :  inflow_streams
+TransactionsRecurringGetResponse *-- TransactionStream  :  outflow_streams
+TransactionsRecurringGetResponse -- RequestID  :  request_id
+
+class TransactionsSyncRequest {
+  client_id  : APIClientID
+  access_token * : AccessToken
+  secret  : APISecret
+  cursor  : string
+  count  : integer
+
+}
+TransactionsSyncRequest -- APIClientID  :  client_id
+TransactionsSyncRequest -- AccessToken  :  access_token
+TransactionsSyncRequest -- APISecret  :  secret
+
+class TransactionsSyncResponse {
+  added * : array[] of Transaction
+  modified * : array[] of Transaction
+  removed * : array[] of RemovedTransaction
+  next_cursor * : string
+  has_more * : boolean
+  request_id * : RequestID
+
+}
+TransactionsSyncResponse *-- Transaction  :  added
+TransactionsSyncResponse *-- Transaction  :  modified
+TransactionsSyncResponse *-- RemovedTransaction  :  removed
+TransactionsSyncResponse -- RequestID  :  request_id
+
+class InstitutionsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  count * : integer
+  offset * : integer
+  country_codes * : array[] of CountryCode
+  options  : InstitutionsGetRequestOptions
+
+}
+InstitutionsGetRequest -- APIClientID  :  client_id
+InstitutionsGetRequest -- APISecret  :  secret
+InstitutionsGetRequest *-- CountryCode  :  country_codes
+InstitutionsGetRequest -- InstitutionsGetRequestOptions  :  options
+
+class InstitutionsGetRequestOptions {
+  products  : array[] of Products
+  routing_numbers  : array[] of strings
+  oauth  : boolean
+  include_optional_metadata  : boolean
+  include_auth_metadata  : boolean
+  include_payment_initiation_metadata  : boolean
+
+}
+InstitutionsGetRequestOptions *-- Products  :  products
+
+class InstitutionsGetResponse {
+  institutions * : array[] of Institution
+  total * : integer
+  request_id * : RequestID
+
+}
+InstitutionsGetResponse *-- Institution  :  institutions
+InstitutionsGetResponse -- RequestID  :  request_id
+
+class InstitutionsSearchRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  query * : string
+  products * : array[] of Products
+  country_codes * : array[] of CountryCode
+  options  : InstitutionsSearchRequestOptions
+
+}
+InstitutionsSearchRequest -- APIClientID  :  client_id
+InstitutionsSearchRequest -- APISecret  :  secret
+InstitutionsSearchRequest *-- Products  :  products
+InstitutionsSearchRequest *-- CountryCode  :  country_codes
+InstitutionsSearchRequest -- InstitutionsSearchRequestOptions  :  options
+
+class InstitutionsSearchRequestOptions {
+  oauth  : boolean
+  include_optional_metadata  : boolean
+  include_auth_metadata  : boolean
+  include_payment_initiation_metadata  : boolean
+  payment_initiation  : InstitutionsSearchPaymentInitiationOptions
+
+}
+InstitutionsSearchRequestOptions -- InstitutionsSearchPaymentInitiationOptions  :  payment_initiation
+
+class InstitutionsSearchPaymentInitiationOptions {
+  payment_id  : string
+
+}
+
+class InstitutionsSearchResponse {
+  institutions * : array[] of Institution
+  request_id * : RequestID
+
+}
+InstitutionsSearchResponse *-- Institution  :  institutions
+InstitutionsSearchResponse -- RequestID  :  request_id
+
+class InstitutionsGetByIdRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  institution_id * : string
+  country_codes * : array[] of CountryCode
+  options  : InstitutionsGetByIdRequestOptions
+
+}
+InstitutionsGetByIdRequest -- APIClientID  :  client_id
+InstitutionsGetByIdRequest -- APISecret  :  secret
+InstitutionsGetByIdRequest *-- CountryCode  :  country_codes
+InstitutionsGetByIdRequest -- InstitutionsGetByIdRequestOptions  :  options
+
+class InstitutionsGetByIdRequestOptions {
+  include_optional_metadata  : boolean
+  include_status  : boolean
+  include_auth_metadata  : boolean
+  include_payment_initiation_metadata  : boolean
+
+}
+
+class InstitutionsGetByIdResponse {
+  institution * : Institution
+  request_id * : RequestID
+
+}
+InstitutionsGetByIdResponse -- Institution  :  institution
+InstitutionsGetByIdResponse -- RequestID  :  request_id
+
+class ItemRemoveRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemRemoveRequest -- APIClientID  :  client_id
+ItemRemoveRequest -- APISecret  :  secret
+ItemRemoveRequest -- AccessToken  :  access_token
+
+class ItemRemoveResponse {
+  request_id * : RequestID
+
+}
+ItemRemoveResponse -- RequestID  :  request_id
+
+class AccountsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : AccountsGetRequestOptions
+
+}
+AccountsGetRequest -- APIClientID  :  client_id
+AccountsGetRequest -- APISecret  :  secret
+AccountsGetRequest -- AccessToken  :  access_token
+AccountsGetRequest -- AccountsGetRequestOptions  :  options
+
+class AccountsGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class AccountsGetResponse {
+  accounts * : array[] of AccountBase
+  item * : Item
+  request_id * : RequestID
+
+}
+AccountsGetResponse *-- AccountBase  :  accounts
+AccountsGetResponse -- Item  :  item
+AccountsGetResponse -- RequestID  :  request_id
+
+class CategoriesGetRequest {
+
+}
+
+class CategoriesGetResponse {
+  categories * : array[] of Category
+  request_id * : RequestID
+
+}
+CategoriesGetResponse *-- Category  :  categories
+CategoriesGetResponse -- RequestID  :  request_id
+
+class AccountsBalanceGetRequest {
+  access_token * : AccessToken
+  secret  : APISecret
+  client_id  : APIClientID
+  options  : AccountsBalanceGetRequestOptions
+
+}
+AccountsBalanceGetRequest -- AccessToken  :  access_token
+AccountsBalanceGetRequest -- APISecret  :  secret
+AccountsBalanceGetRequest -- APIClientID  :  client_id
+AccountsBalanceGetRequest -- AccountsBalanceGetRequestOptions  :  options
+
+class AccountsBalanceGetRequestOptions {
+  account_ids  : array[] of strings
+  min_last_updated_datetime  : MinLastUpdatedDatetime
+
+}
+AccountsBalanceGetRequestOptions -- MinLastUpdatedDatetime  :  min_last_updated_datetime
+
+class IdentityGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : IdentityGetRequestOptions
+
+}
+IdentityGetRequest -- APIClientID  :  client_id
+IdentityGetRequest -- APISecret  :  secret
+IdentityGetRequest -- AccessToken  :  access_token
+IdentityGetRequest -- IdentityGetRequestOptions  :  options
+
+class IdentityGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class IdentityGetResponse {
+  accounts * : array[] of AccountIdentity
+  item * : Item
+  request_id * : RequestID
+
+}
+IdentityGetResponse *-- AccountIdentity  :  accounts
+IdentityGetResponse -- Item  :  item
+IdentityGetResponse -- RequestID  :  request_id
+
+class ProcessorAuthGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  processor_token * : ProcessorToken
+
+}
+ProcessorAuthGetRequest -- APIClientID  :  client_id
+ProcessorAuthGetRequest -- APISecret  :  secret
+ProcessorAuthGetRequest -- ProcessorToken  :  processor_token
+
+class ProcessorAuthGetResponse {
+  request_id * : RequestID
+  numbers * : ProcessorNumber
+  account * : AccountBase
+
+}
+ProcessorAuthGetResponse -- RequestID  :  request_id
+ProcessorAuthGetResponse -- ProcessorNumber  :  numbers
+ProcessorAuthGetResponse -- AccountBase  :  account
+
+class ProcessorNumber {
+  ach  : NumbersACHNullable
+
+}
+ProcessorNumber -- NumbersACHNullable  :  ach
+
+class ProcessorIdentityGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  processor_token * : ProcessorToken
+
+}
+ProcessorIdentityGetRequest -- APIClientID  :  client_id
+ProcessorIdentityGetRequest -- APISecret  :  secret
+ProcessorIdentityGetRequest -- ProcessorToken  :  processor_token
+
+class ProcessorIdentityGetResponse {
+  account * : AccountIdentity
+  request_id * : RequestID
+
+}
+ProcessorIdentityGetResponse -- AccountIdentity  :  account
+ProcessorIdentityGetResponse -- RequestID  :  request_id
+
+class ProcessorBalanceGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  processor_token * : ProcessorToken
+  options  : ProcessorBalanceGetRequestOptions
+
+}
+ProcessorBalanceGetRequest -- APIClientID  :  client_id
+ProcessorBalanceGetRequest -- APISecret  :  secret
+ProcessorBalanceGetRequest -- ProcessorToken  :  processor_token
+ProcessorBalanceGetRequest -- ProcessorBalanceGetRequestOptions  :  options
+
+class ProcessorBalanceGetRequestOptions {
+  min_last_updated_datetime  : MinLastUpdatedDatetime
+
+}
+ProcessorBalanceGetRequestOptions -- MinLastUpdatedDatetime  :  min_last_updated_datetime
+
+class ProcessorBalanceGetResponse {
+  account * : AccountBase
+  request_id * : RequestID
+
+}
+ProcessorBalanceGetResponse -- AccountBase  :  account
+ProcessorBalanceGetResponse -- RequestID  :  request_id
+
+class ItemAccessTokenInvalidateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemAccessTokenInvalidateRequest -- APIClientID  :  client_id
+ItemAccessTokenInvalidateRequest -- APISecret  :  secret
+ItemAccessTokenInvalidateRequest -- AccessToken  :  access_token
+
+class ItemAccessTokenInvalidateResponse {
+  new_access_token * : AccessToken
+  request_id * : RequestID
+
+}
+ItemAccessTokenInvalidateResponse -- AccessToken  :  new_access_token
+ItemAccessTokenInvalidateResponse -- RequestID  :  request_id
+
+class ItemPublicTokenExchangeRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  public_token * : string
+
+}
+ItemPublicTokenExchangeRequest -- APIClientID  :  client_id
+ItemPublicTokenExchangeRequest -- APISecret  :  secret
+
+class ItemPublicTokenExchangeResponse {
+  access_token * : AccessToken
+  item_id * : string
+  request_id * : RequestID
+
+}
+ItemPublicTokenExchangeResponse -- AccessToken  :  access_token
+ItemPublicTokenExchangeResponse -- RequestID  :  request_id
+
+class ProcessorTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+  processor * : enum
+
+}
+ProcessorTokenCreateRequest -- APIClientID  :  client_id
+ProcessorTokenCreateRequest -- APISecret  :  secret
+ProcessorTokenCreateRequest -- AccessToken  :  access_token
+
+class ProcessorTokenCreateResponse {
+  processor_token * : string
+  request_id * : RequestID
+
+}
+ProcessorTokenCreateResponse -- RequestID  :  request_id
+
+class ProcessorStripeBankAccountTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+
+}
+ProcessorStripeBankAccountTokenCreateRequest -- APIClientID  :  client_id
+ProcessorStripeBankAccountTokenCreateRequest -- APISecret  :  secret
+ProcessorStripeBankAccountTokenCreateRequest -- AccessToken  :  access_token
+
+class ProcessorStripeBankAccountTokenCreateResponse {
+  stripe_bank_account_token * : string
+  request_id * : RequestID
+
+}
+ProcessorStripeBankAccountTokenCreateResponse -- RequestID  :  request_id
+
+class ItemImportRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  products * : array[] of Products
+  user_auth * : ItemImportRequestUserAuth
+  options  : ItemImportRequestOptions
+
+}
+ItemImportRequest -- APIClientID  :  client_id
+ItemImportRequest -- APISecret  :  secret
+ItemImportRequest *-- Products  :  products
+ItemImportRequest -- ItemImportRequestUserAuth  :  user_auth
+ItemImportRequest -- ItemImportRequestOptions  :  options
+
+class ItemImportRequestOptions {
+  webhook  : string
+
+}
+
+class ItemImportRequestUserAuth {
+  user_id * : string
+  auth_token * : string
+
+}
+
+class ItemImportResponse {
+  access_token * : AccessToken
+  request_id * : RequestID
+
+}
+ItemImportResponse -- AccessToken  :  access_token
+ItemImportResponse -- RequestID  :  request_id
+
+class LinkTokenGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  link_token * : string
+
+}
+LinkTokenGetRequest -- APIClientID  :  client_id
+LinkTokenGetRequest -- APISecret  :  secret
+
+class LinkTokenCreateRequest {
+  client_name * : string
+  language * : string
+  country_codes * : array[] of CountryCode
+  user * : LinkTokenCreateRequestUser
+  products  : array[] of Products
+  webhook  : string
+  access_token  : string
+  link_customization_name  : string
+  redirect_uri  : string
+  account_filters  : LinkTokenAccountFilters
+  institution_id  : string
+  auth  : LinkTokenCreateRequestAuth
+  transfer  : LinkTokenCreateRequestTransfer
+  update  : LinkTokenCreateRequestUpdate
+
+}
+LinkTokenCreateRequest *-- CountryCode  :  country_codes
+LinkTokenCreateRequest -- LinkTokenCreateRequestUser  :  user
+LinkTokenCreateRequest *-- Products  :  products
+LinkTokenCreateRequest -- LinkTokenAccountFilters  :  account_filters
+LinkTokenCreateRequest -- LinkTokenCreateRequestAuth  :  auth
+LinkTokenCreateRequest -- LinkTokenCreateRequestTransfer  :  transfer
+LinkTokenCreateRequest -- LinkTokenCreateRequestUpdate  :  update
+
+class LinkTokenAccountFilters {
+  depository  : DepositoryFilter
+  credit  : CreditFilter
+
+}
+LinkTokenAccountFilters -- DepositoryFilter  :  depository
+LinkTokenAccountFilters -- CreditFilter  :  credit
+
+class LinkTokenCreateRequestTransfer {
+  intent_id  : string
+
+}
+
+class LinkTokenCreateRequestAuth {
+  flow_type * : enum
+
+}
+
+class LinkTokenCreateRequestUser {
+  client_user_id * : string
+  legal_name  : string
+  phone_number  : string
+  phone_number_verified_time  : date-time
+  email_address  : string
+  email_address_verified_time  : date-time
+  ssn  : string
+  date_of_birth  : date
+
+}
+
+class LinkTokenCreateRequestUpdate {
+  account_selection_enabled  : boolean
+
+}
+
+class LinkTokenCreateRequestAccountSubtypes {
+  depository  : object
+  credit  : object
+
+}
+
+class LinkTokenGetResponse {
+  link_token * : string
+  created_at * : date-time
+  expiration * : date-time
+  metadata * : LinkTokenGetMetadataResponse
+  request_id * : RequestID
+
+}
+LinkTokenGetResponse -- LinkTokenGetMetadataResponse  :  metadata
+LinkTokenGetResponse -- RequestID  :  request_id
+
+class LinkTokenGetMetadataResponse {
+  initial_products * : array[] of Products
+  webhook * : string
+  country_codes * : array[] of CountryCode
+  language * : string
+  account_filters  : AccountFiltersResponse
+  redirect_uri * : string
+  client_name * : string
+
+}
+LinkTokenGetMetadataResponse *-- Products  :  initial_products
+LinkTokenGetMetadataResponse *-- CountryCode  :  country_codes
+LinkTokenGetMetadataResponse -- AccountFiltersResponse  :  account_filters
+
+class LinkTokenCreateResponse {
+  link_token * : string
+  expiration * : date-time
+  request_id * : RequestID
+
+}
+LinkTokenCreateResponse -- RequestID  :  request_id
+
+class Item {
+  item_id * : string
+  institution_id  : string
+  webhook * : string
+  error * : Error
+  available_products * : array[] of Products
+  billed_products * : array[] of Products
+  products  : array[] of Products
+  consent_expiration_time * : date-time
+  update_type * : enum
+
+}
+Item -- Error  :  error
+Item *-- Products  :  available_products
+Item *-- Products  :  billed_products
+Item *-- Products  :  products
+
+class Error {
+  error_type * : enum
+  error_code * : string
+  error_message * : string
+  display_message * : string
+  request_id  : string
+  causes  : array[] of
+  status  : number
+  documentation_url  : string
+  suggested_action  : string
+
+}
+
+class ItemStatusNullable {
+
+}
+ItemStatus <|-- ItemStatusNullable
+
+class ItemStatusTransactions {
+  last_successful_update  : date-time
+  last_failed_update  : date-time
+
+}
+
+class ItemStatusInvestments {
+  last_successful_update  : date-time
+  last_failed_update  : date-time
+
+}
+
+class ItemStatusLastWebhook {
+  sent_at  : date-time
+  code_sent  : string
+
+}
+
+class ItemStatus {
+  investments  : ItemStatusInvestments
+  transactions  : ItemStatusTransactions
+  last_webhook  : ItemStatusLastWebhook
+
+}
+ItemStatus -- ItemStatusInvestments  :  investments
+ItemStatus -- ItemStatusTransactions  :  transactions
+ItemStatus -- ItemStatusLastWebhook  :  last_webhook
+
+class AccountBase {
+  account_id * : string
+  balances * : AccountBalance
+  mask * : string
+  name * : string
+  official_name * : string
+  type * : AccountType
+  subtype * : AccountSubtype
+  verification_status  : enum
+
+}
+AccountBase -- AccountBalance  :  balances
+AccountBase -- AccountType  :  type
+AccountBase -- AccountSubtype  :  subtype
+
+class AccountBalance {
+  available * : number
+  current * : number
+  limit * : number
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+  last_updated_datetime  : date-time
+
+}
+
+class NumbersACH {
+  account_id * : string
+  account * : string
+  routing * : string
+  wire_routing * : string
+
+}
+
+class NumbersACHNullable {
+
+}
+NumbersACH <|-- NumbersACHNullable
+
+class RemovedTransaction {
+  transaction_id  : string
+
+}
+
+class TransactionBase {
+  pending_transaction_id  : string
+  category_id  : string
+  category  : array[] of strings
+  location  : Location
+  payment_meta  : PaymentMeta
+  account_owner  : string
+  name  : string
+  original_description  : string
+  account_id * : string
+  amount * : number
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+  date * : date
+  pending * : boolean
+  transaction_id * : string
+  merchant_name  : string
+  check_number  : string
+
+}
+TransactionBase -- Location  :  location
+TransactionBase -- PaymentMeta  :  payment_meta
+
+class Transaction {
+  payment_channel * : enum
+  authorized_date * : date
+  authorized_datetime * : date-time
+  datetime * : date-time
+  transaction_code * : TransactionCode
+  personal_finance_category  : undefined
+
+}
+Transaction -- TransactionCode  :  transaction_code
+TransactionBase <|-- Transaction
