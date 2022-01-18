@@ -1,0 +1,4975 @@
+@startuml
+
+class ItemGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemGetRequest -- APIClientID  :  client_id
+ItemGetRequest -- APISecret  :  secret
+ItemGetRequest -- AccessToken  :  access_token
+
+class ItemGetResponse {
+  item * : Item
+  status  : ItemStatusNullable
+  request_id * : RequestID
+
+}
+ItemGetResponse -- Item  :  item
+ItemGetResponse -- ItemStatusNullable  :  status
+ItemGetResponse -- RequestID  :  request_id
+
+class AuthGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : AuthGetRequestOptions
+
+}
+AuthGetRequest -- APIClientID  :  client_id
+AuthGetRequest -- APISecret  :  secret
+AuthGetRequest -- AccessToken  :  access_token
+AuthGetRequest -- AuthGetRequestOptions  :  options
+
+class AuthGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class AuthGetResponse {
+  accounts * : array[] of AccountBase
+  numbers * : AuthGetNumbers
+  item * : Item
+  request_id * : RequestID
+
+}
+AuthGetResponse *-- AccountBase  :  accounts
+AuthGetResponse -- AuthGetNumbers  :  numbers
+AuthGetResponse -- Item  :  item
+AuthGetResponse -- RequestID  :  request_id
+
+class AuthGetNumbers {
+  ach * : array[] of NumbersACH
+  eft * : array[] of NumbersEFT
+  international * : array[] of NumbersInternational
+  bacs * : array[] of NumbersBACS
+
+}
+AuthGetNumbers *-- NumbersACH  :  ach
+AuthGetNumbers *-- NumbersEFT  :  eft
+AuthGetNumbers *-- NumbersInternational  :  international
+AuthGetNumbers *-- NumbersBACS  :  bacs
+
+class TransactionsGetRequest {
+  client_id  : APIClientID
+  options  : TransactionsGetRequestOptions
+  access_token * : AccessToken
+  secret  : APISecret
+  start_date * : date
+  end_date * : date
+
+}
+TransactionsGetRequest -- APIClientID  :  client_id
+TransactionsGetRequest -- TransactionsGetRequestOptions  :  options
+TransactionsGetRequest -- AccessToken  :  access_token
+TransactionsGetRequest -- APISecret  :  secret
+
+class TransactionsGetRequestOptions {
+  account_ids  : array[] of strings
+  count  : integer
+  offset  : integer
+  include_original_description  : boolean
+  include_personal_finance_category_beta  : boolean
+
+}
+
+class TransactionsGetResponse {
+  accounts * : array[] of AccountBase
+  transactions * : array[] of Transaction
+  total_transactions * : integer
+  item * : Item
+  request_id * : RequestID
+
+}
+TransactionsGetResponse *-- AccountBase  :  accounts
+TransactionsGetResponse *-- Transaction  :  transactions
+TransactionsGetResponse -- Item  :  item
+TransactionsGetResponse -- RequestID  :  request_id
+
+class TransactionsRefreshRequest {
+  client_id  : APIClientID
+  access_token * : AccessToken
+  secret  : APISecret
+
+}
+TransactionsRefreshRequest -- APIClientID  :  client_id
+TransactionsRefreshRequest -- AccessToken  :  access_token
+TransactionsRefreshRequest -- APISecret  :  secret
+
+class TransactionsRefreshResponse {
+  request_id * : RequestID
+
+}
+TransactionsRefreshResponse -- RequestID  :  request_id
+
+class TransactionsRecurringGetRequest {
+  client_id  : APIClientID
+  access_token * : AccessToken
+  secret  : APISecret
+  account_ids * : array[] of strings
+
+}
+TransactionsRecurringGetRequest -- APIClientID  :  client_id
+TransactionsRecurringGetRequest -- AccessToken  :  access_token
+TransactionsRecurringGetRequest -- APISecret  :  secret
+
+class TransactionsRecurringGetResponse {
+  inflow_streams * : array[] of TransactionStream
+  outflow_streams * : array[] of TransactionStream
+  request_id * : RequestID
+
+}
+TransactionsRecurringGetResponse *-- TransactionStream  :  inflow_streams
+TransactionsRecurringGetResponse *-- TransactionStream  :  outflow_streams
+TransactionsRecurringGetResponse -- RequestID  :  request_id
+
+class TransactionsSyncRequest {
+  client_id  : APIClientID
+  access_token * : AccessToken
+  secret  : APISecret
+  cursor  : string
+  count  : integer
+
+}
+TransactionsSyncRequest -- APIClientID  :  client_id
+TransactionsSyncRequest -- AccessToken  :  access_token
+TransactionsSyncRequest -- APISecret  :  secret
+
+class TransactionsSyncResponse {
+  added * : array[] of Transaction
+  modified * : array[] of Transaction
+  removed * : array[] of RemovedTransaction
+  next_cursor * : string
+  has_more * : boolean
+  request_id * : RequestID
+
+}
+TransactionsSyncResponse *-- Transaction  :  added
+TransactionsSyncResponse *-- Transaction  :  modified
+TransactionsSyncResponse *-- RemovedTransaction  :  removed
+TransactionsSyncResponse -- RequestID  :  request_id
+
+class InstitutionsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  count * : integer
+  offset * : integer
+  country_codes * : array[] of CountryCode
+  options  : InstitutionsGetRequestOptions
+
+}
+InstitutionsGetRequest -- APIClientID  :  client_id
+InstitutionsGetRequest -- APISecret  :  secret
+InstitutionsGetRequest *-- CountryCode  :  country_codes
+InstitutionsGetRequest -- InstitutionsGetRequestOptions  :  options
+
+class InstitutionsGetRequestOptions {
+  products  : array[] of Products
+  routing_numbers  : array[] of strings
+  oauth  : boolean
+  include_optional_metadata  : boolean
+  include_auth_metadata  : boolean
+  include_payment_initiation_metadata  : boolean
+
+}
+InstitutionsGetRequestOptions *-- Products  :  products
+
+class InstitutionsGetResponse {
+  institutions * : array[] of Institution
+  total * : integer
+  request_id * : RequestID
+
+}
+InstitutionsGetResponse *-- Institution  :  institutions
+InstitutionsGetResponse -- RequestID  :  request_id
+
+class InstitutionsSearchRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  query * : string
+  products * : array[] of Products
+  country_codes * : array[] of CountryCode
+  options  : InstitutionsSearchRequestOptions
+
+}
+InstitutionsSearchRequest -- APIClientID  :  client_id
+InstitutionsSearchRequest -- APISecret  :  secret
+InstitutionsSearchRequest *-- Products  :  products
+InstitutionsSearchRequest *-- CountryCode  :  country_codes
+InstitutionsSearchRequest -- InstitutionsSearchRequestOptions  :  options
+
+class InstitutionsSearchRequestOptions {
+  oauth  : boolean
+  include_optional_metadata  : boolean
+  include_auth_metadata  : boolean
+  include_payment_initiation_metadata  : boolean
+  payment_initiation  : InstitutionsSearchPaymentInitiationOptions
+
+}
+InstitutionsSearchRequestOptions -- InstitutionsSearchPaymentInitiationOptions  :  payment_initiation
+
+class InstitutionsSearchPaymentInitiationOptions {
+  payment_id  : string
+
+}
+
+class InstitutionsSearchResponse {
+  institutions * : array[] of Institution
+  request_id * : RequestID
+
+}
+InstitutionsSearchResponse *-- Institution  :  institutions
+InstitutionsSearchResponse -- RequestID  :  request_id
+
+class InstitutionsGetByIdRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  institution_id * : string
+  country_codes * : array[] of CountryCode
+  options  : InstitutionsGetByIdRequestOptions
+
+}
+InstitutionsGetByIdRequest -- APIClientID  :  client_id
+InstitutionsGetByIdRequest -- APISecret  :  secret
+InstitutionsGetByIdRequest *-- CountryCode  :  country_codes
+InstitutionsGetByIdRequest -- InstitutionsGetByIdRequestOptions  :  options
+
+class InstitutionsGetByIdRequestOptions {
+  include_optional_metadata  : boolean
+  include_status  : boolean
+  include_auth_metadata  : boolean
+  include_payment_initiation_metadata  : boolean
+
+}
+
+class InstitutionsGetByIdResponse {
+  institution * : Institution
+  request_id * : RequestID
+
+}
+InstitutionsGetByIdResponse -- Institution  :  institution
+InstitutionsGetByIdResponse -- RequestID  :  request_id
+
+class ItemRemoveRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemRemoveRequest -- APIClientID  :  client_id
+ItemRemoveRequest -- APISecret  :  secret
+ItemRemoveRequest -- AccessToken  :  access_token
+
+class ItemRemoveResponse {
+  request_id * : RequestID
+
+}
+ItemRemoveResponse -- RequestID  :  request_id
+
+class AccountsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : AccountsGetRequestOptions
+
+}
+AccountsGetRequest -- APIClientID  :  client_id
+AccountsGetRequest -- APISecret  :  secret
+AccountsGetRequest -- AccessToken  :  access_token
+AccountsGetRequest -- AccountsGetRequestOptions  :  options
+
+class AccountsGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class AccountsGetResponse {
+  accounts * : array[] of AccountBase
+  item * : Item
+  request_id * : RequestID
+
+}
+AccountsGetResponse *-- AccountBase  :  accounts
+AccountsGetResponse -- Item  :  item
+AccountsGetResponse -- RequestID  :  request_id
+
+class CategoriesGetRequest {
+
+}
+
+class CategoriesGetResponse {
+  categories * : array[] of Category
+  request_id * : RequestID
+
+}
+CategoriesGetResponse *-- Category  :  categories
+CategoriesGetResponse -- RequestID  :  request_id
+
+class SandboxProcessorTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  institution_id * : string
+  options  : SandboxProcessorTokenCreateRequestOptions
+
+}
+SandboxProcessorTokenCreateRequest -- APIClientID  :  client_id
+SandboxProcessorTokenCreateRequest -- APISecret  :  secret
+SandboxProcessorTokenCreateRequest -- SandboxProcessorTokenCreateRequestOptions  :  options
+
+class SandboxProcessorTokenCreateRequestOptions {
+  override_username  : SandboxOverrideUsername
+  override_password  : SandboxOverridePassword
+
+}
+SandboxProcessorTokenCreateRequestOptions -- SandboxOverrideUsername  :  override_username
+SandboxProcessorTokenCreateRequestOptions -- SandboxOverridePassword  :  override_password
+
+class SandboxProcessorTokenCreateResponse {
+  processor_token * : string
+  request_id * : RequestID
+
+}
+SandboxProcessorTokenCreateResponse -- RequestID  :  request_id
+
+class SandboxPublicTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  institution_id * : string
+  initial_products * : array[] of Products
+  options  : SandboxPublicTokenCreateRequestOptions
+
+}
+SandboxPublicTokenCreateRequest -- APIClientID  :  client_id
+SandboxPublicTokenCreateRequest -- APISecret  :  secret
+SandboxPublicTokenCreateRequest *-- Products  :  initial_products
+SandboxPublicTokenCreateRequest -- SandboxPublicTokenCreateRequestOptions  :  options
+
+class SandboxPublicTokenCreateRequestOptions {
+  webhook  : string
+  override_username  : SandboxOverrideUsername
+  override_password  : SandboxOverridePassword
+  transactions  : SandboxPublicTokenCreateRequestOptionsTransactions
+
+}
+SandboxPublicTokenCreateRequestOptions -- SandboxOverrideUsername  :  override_username
+SandboxPublicTokenCreateRequestOptions -- SandboxOverridePassword  :  override_password
+SandboxPublicTokenCreateRequestOptions -- SandboxPublicTokenCreateRequestOptionsTransactions  :  transactions
+
+class SandboxPublicTokenCreateRequestOptionsTransactions {
+  start_date  : date
+  end_date  : date
+
+}
+
+class SandboxPublicTokenCreateResponse {
+  public_token * : string
+  request_id * : RequestID
+
+}
+SandboxPublicTokenCreateResponse -- RequestID  :  request_id
+
+class SandboxItemFireWebhookRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  webhook_code * : enum
+
+}
+SandboxItemFireWebhookRequest -- APIClientID  :  client_id
+SandboxItemFireWebhookRequest -- APISecret  :  secret
+SandboxItemFireWebhookRequest -- AccessToken  :  access_token
+
+class SandboxItemFireWebhookResponse {
+  webhook_fired * : boolean
+  request_id * : RequestID
+
+}
+SandboxItemFireWebhookResponse -- RequestID  :  request_id
+
+class AccountsBalanceGetRequest {
+  access_token * : AccessToken
+  secret  : APISecret
+  client_id  : APIClientID
+  options  : AccountsBalanceGetRequestOptions
+
+}
+AccountsBalanceGetRequest -- AccessToken  :  access_token
+AccountsBalanceGetRequest -- APISecret  :  secret
+AccountsBalanceGetRequest -- APIClientID  :  client_id
+AccountsBalanceGetRequest -- AccountsBalanceGetRequestOptions  :  options
+
+class AccountsBalanceGetRequestOptions {
+  account_ids  : array[] of strings
+  min_last_updated_datetime  : MinLastUpdatedDatetime
+
+}
+AccountsBalanceGetRequestOptions -- MinLastUpdatedDatetime  :  min_last_updated_datetime
+
+class IdentityGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : IdentityGetRequestOptions
+
+}
+IdentityGetRequest -- APIClientID  :  client_id
+IdentityGetRequest -- APISecret  :  secret
+IdentityGetRequest -- AccessToken  :  access_token
+IdentityGetRequest -- IdentityGetRequestOptions  :  options
+
+class IdentityGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class IdentityGetResponse {
+  accounts * : array[] of AccountIdentity
+  item * : Item
+  request_id * : RequestID
+
+}
+IdentityGetResponse *-- AccountIdentity  :  accounts
+IdentityGetResponse -- Item  :  item
+IdentityGetResponse -- RequestID  :  request_id
+
+class ProcessorAuthGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  processor_token * : ProcessorToken
+
+}
+ProcessorAuthGetRequest -- APIClientID  :  client_id
+ProcessorAuthGetRequest -- APISecret  :  secret
+ProcessorAuthGetRequest -- ProcessorToken  :  processor_token
+
+class ProcessorAuthGetResponse {
+  request_id * : RequestID
+  numbers * : ProcessorNumber
+  account * : AccountBase
+
+}
+ProcessorAuthGetResponse -- RequestID  :  request_id
+ProcessorAuthGetResponse -- ProcessorNumber  :  numbers
+ProcessorAuthGetResponse -- AccountBase  :  account
+
+class ProcessorBankTransferCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  idempotency_key * : BankTransferIdempotencyKey
+  processor_token * : ProcessorToken
+  type * : BankTransferType
+  network * : BankTransferNetwork
+  amount * : BankTransferAmount
+  iso_currency_code * : string
+  description * : string
+  ach_class  : ACHClass
+  user * : BankTransferUser
+  custom_tag  : string
+  metadata  : BankTransferMetadata
+  origination_account_id  : string
+
+}
+ProcessorBankTransferCreateRequest -- APIClientID  :  client_id
+ProcessorBankTransferCreateRequest -- APISecret  :  secret
+ProcessorBankTransferCreateRequest -- BankTransferIdempotencyKey  :  idempotency_key
+ProcessorBankTransferCreateRequest -- ProcessorToken  :  processor_token
+ProcessorBankTransferCreateRequest -- BankTransferType  :  type
+ProcessorBankTransferCreateRequest -- BankTransferNetwork  :  network
+ProcessorBankTransferCreateRequest -- BankTransferAmount  :  amount
+ProcessorBankTransferCreateRequest -- ACHClass  :  ach_class
+ProcessorBankTransferCreateRequest -- BankTransferUser  :  user
+ProcessorBankTransferCreateRequest -- BankTransferMetadata  :  metadata
+
+class ProcessorBankTransferCreateResponse {
+  bank_transfer * : BankTransfer
+  request_id * : RequestID
+
+}
+ProcessorBankTransferCreateResponse -- BankTransfer  :  bank_transfer
+ProcessorBankTransferCreateResponse -- RequestID  :  request_id
+
+class ProcessorNumber {
+  ach  : NumbersACHNullable
+  eft  : NumbersEFTNullable
+  international  : NumbersInternationalNullable
+  bacs  : NumbersBACSNullable
+
+}
+ProcessorNumber -- NumbersACHNullable  :  ach
+ProcessorNumber -- NumbersEFTNullable  :  eft
+ProcessorNumber -- NumbersInternationalNullable  :  international
+ProcessorNumber -- NumbersBACSNullable  :  bacs
+
+class ProcessorIdentityGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  processor_token * : ProcessorToken
+
+}
+ProcessorIdentityGetRequest -- APIClientID  :  client_id
+ProcessorIdentityGetRequest -- APISecret  :  secret
+ProcessorIdentityGetRequest -- ProcessorToken  :  processor_token
+
+class ProcessorIdentityGetResponse {
+  account * : AccountIdentity
+  request_id * : RequestID
+
+}
+ProcessorIdentityGetResponse -- AccountIdentity  :  account
+ProcessorIdentityGetResponse -- RequestID  :  request_id
+
+class ProcessorBalanceGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  processor_token * : ProcessorToken
+  options  : ProcessorBalanceGetRequestOptions
+
+}
+ProcessorBalanceGetRequest -- APIClientID  :  client_id
+ProcessorBalanceGetRequest -- APISecret  :  secret
+ProcessorBalanceGetRequest -- ProcessorToken  :  processor_token
+ProcessorBalanceGetRequest -- ProcessorBalanceGetRequestOptions  :  options
+
+class ProcessorBalanceGetRequestOptions {
+  min_last_updated_datetime  : MinLastUpdatedDatetime
+
+}
+ProcessorBalanceGetRequestOptions -- MinLastUpdatedDatetime  :  min_last_updated_datetime
+
+class ProcessorBalanceGetResponse {
+  account * : AccountBase
+  request_id * : RequestID
+
+}
+ProcessorBalanceGetResponse -- AccountBase  :  account
+ProcessorBalanceGetResponse -- RequestID  :  request_id
+
+class ItemWebhookUpdateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  webhook  : string
+
+}
+ItemWebhookUpdateRequest -- APIClientID  :  client_id
+ItemWebhookUpdateRequest -- APISecret  :  secret
+ItemWebhookUpdateRequest -- AccessToken  :  access_token
+
+class ItemWebhookUpdateResponse {
+  item * : Item
+  request_id * : RequestID
+
+}
+ItemWebhookUpdateResponse -- Item  :  item
+ItemWebhookUpdateResponse -- RequestID  :  request_id
+
+class ItemAccessTokenInvalidateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemAccessTokenInvalidateRequest -- APIClientID  :  client_id
+ItemAccessTokenInvalidateRequest -- APISecret  :  secret
+ItemAccessTokenInvalidateRequest -- AccessToken  :  access_token
+
+class ItemAccessTokenInvalidateResponse {
+  new_access_token * : AccessToken
+  request_id * : RequestID
+
+}
+ItemAccessTokenInvalidateResponse -- AccessToken  :  new_access_token
+ItemAccessTokenInvalidateResponse -- RequestID  :  request_id
+
+class WebhookVerificationKeyGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  key_id * : string
+
+}
+WebhookVerificationKeyGetRequest -- APIClientID  :  client_id
+WebhookVerificationKeyGetRequest -- APISecret  :  secret
+
+class WebhookVerificationKeyGetResponse {
+  key * : JWKPublicKey
+  request_id * : RequestID
+
+}
+WebhookVerificationKeyGetResponse -- JWKPublicKey  :  key
+WebhookVerificationKeyGetResponse -- RequestID  :  request_id
+
+class JWKPublicKey {
+  alg * : string
+  crv * : string
+  kid * : string
+  kty * : string
+  use * : string
+  x * : string
+  y * : string
+  created_at * : integer
+  expired_at * : integer
+
+}
+
+class LiabilitiesGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : LiabilitiesGetRequestOptions
+
+}
+LiabilitiesGetRequest -- APIClientID  :  client_id
+LiabilitiesGetRequest -- APISecret  :  secret
+LiabilitiesGetRequest -- AccessToken  :  access_token
+LiabilitiesGetRequest -- LiabilitiesGetRequestOptions  :  options
+
+class LiabilitiesGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class LiabilitiesGetResponse {
+  accounts * : array[] of AccountBase
+  item * : Item
+  liabilities * : LiabilitiesObject
+  request_id * : RequestID
+
+}
+LiabilitiesGetResponse *-- AccountBase  :  accounts
+LiabilitiesGetResponse -- Item  :  item
+LiabilitiesGetResponse -- LiabilitiesObject  :  liabilities
+LiabilitiesGetResponse -- RequestID  :  request_id
+
+class PaymentInitiationRecipientCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  name * : string
+  iban  : string
+  bacs  : RecipientBACSNullable
+  address  : PaymentInitiationAddress
+
+}
+PaymentInitiationRecipientCreateRequest -- APIClientID  :  client_id
+PaymentInitiationRecipientCreateRequest -- APISecret  :  secret
+PaymentInitiationRecipientCreateRequest -- RecipientBACSNullable  :  bacs
+PaymentInitiationRecipientCreateRequest -- PaymentInitiationAddress  :  address
+
+class PaymentInitiationRecipientCreateResponse {
+  recipient_id * : string
+  request_id * : RequestID
+
+}
+PaymentInitiationRecipientCreateResponse -- RequestID  :  request_id
+
+class PaymentInitiationPaymentReverseResponse {
+  refund_id * : string
+  status * : enum
+  request_id * : RequestID
+
+}
+PaymentInitiationPaymentReverseResponse -- RequestID  :  request_id
+
+class PaymentInitiationRecipientGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  recipient_id * : string
+
+}
+PaymentInitiationRecipientGetRequest -- APIClientID  :  client_id
+PaymentInitiationRecipientGetRequest -- APISecret  :  secret
+
+class PaymentInitiationRecipientGetResponse {
+  request_id  : RequestID
+
+}
+PaymentInitiationRecipientGetResponse -- RequestID  :  request_id
+PaymentInitiationRecipient <|-- PaymentInitiationRecipientGetResponse
+
+class PaymentInitiationRecipient {
+  recipient_id * : string
+  name * : string
+  address  : PaymentInitiationAddress
+  iban  : string
+  bacs  : RecipientBACSNullable
+  emi_recipient_id  : string
+
+}
+PaymentInitiationRecipient -- PaymentInitiationAddress  :  address
+PaymentInitiationRecipient -- RecipientBACSNullable  :  bacs
+
+class PaymentInitiationRecipientListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+
+}
+PaymentInitiationRecipientListRequest -- APIClientID  :  client_id
+PaymentInitiationRecipientListRequest -- APISecret  :  secret
+
+class PaymentInitiationRecipientListResponse {
+  recipients * : array[] of PaymentInitiationRecipient
+  request_id * : RequestID
+
+}
+PaymentInitiationRecipientListResponse *-- PaymentInitiationRecipient  :  recipients
+PaymentInitiationRecipientListResponse -- RequestID  :  request_id
+
+class PaymentInitiationPaymentCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  recipient_id * : string
+  reference * : string
+  amount * : PaymentAmount
+  schedule  : ExternalPaymentScheduleRequest
+  options  : ExternalPaymentOptions
+
+}
+PaymentInitiationPaymentCreateRequest -- APIClientID  :  client_id
+PaymentInitiationPaymentCreateRequest -- APISecret  :  secret
+PaymentInitiationPaymentCreateRequest -- PaymentAmount  :  amount
+PaymentInitiationPaymentCreateRequest -- ExternalPaymentScheduleRequest  :  schedule
+PaymentInitiationPaymentCreateRequest -- ExternalPaymentOptions  :  options
+
+class PaymentInitiationPaymentReverseRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  payment_id * : string
+
+}
+PaymentInitiationPaymentReverseRequest -- APIClientID  :  client_id
+PaymentInitiationPaymentReverseRequest -- APISecret  :  secret
+
+class PaymentInitiationPaymentCreateResponse {
+  payment_id * : string
+  status * : enum
+  request_id * : RequestID
+
+}
+PaymentInitiationPaymentCreateResponse -- RequestID  :  request_id
+
+class SandboxItemResetLoginRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+SandboxItemResetLoginRequest -- APIClientID  :  client_id
+SandboxItemResetLoginRequest -- APISecret  :  secret
+SandboxItemResetLoginRequest -- AccessToken  :  access_token
+
+class SandboxItemResetLoginResponse {
+  reset_login * : boolean
+  request_id * : RequestID
+
+}
+SandboxItemResetLoginResponse -- RequestID  :  request_id
+
+class SandboxItemSetVerificationStatusRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+  verification_status * : enum
+
+}
+SandboxItemSetVerificationStatusRequest -- APIClientID  :  client_id
+SandboxItemSetVerificationStatusRequest -- APISecret  :  secret
+SandboxItemSetVerificationStatusRequest -- AccessToken  :  access_token
+
+class SandboxItemSetVerificationStatusResponse {
+  request_id * : RequestID
+
+}
+SandboxItemSetVerificationStatusResponse -- RequestID  :  request_id
+
+class ItemPublicTokenExchangeRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  public_token * : string
+
+}
+ItemPublicTokenExchangeRequest -- APIClientID  :  client_id
+ItemPublicTokenExchangeRequest -- APISecret  :  secret
+
+class ItemPublicTokenExchangeResponse {
+  access_token * : AccessToken
+  item_id * : string
+  request_id * : RequestID
+
+}
+ItemPublicTokenExchangeResponse -- AccessToken  :  access_token
+ItemPublicTokenExchangeResponse -- RequestID  :  request_id
+
+class ItemPublicTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+ItemPublicTokenCreateRequest -- APIClientID  :  client_id
+ItemPublicTokenCreateRequest -- APISecret  :  secret
+ItemPublicTokenCreateRequest -- AccessToken  :  access_token
+
+class ItemPublicTokenCreateResponse {
+  public_token * : string
+  expiration  : date-time
+  request_id * : RequestID
+
+}
+ItemPublicTokenCreateResponse -- RequestID  :  request_id
+
+class PaymentInitiationPaymentGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  payment_id * : string
+
+}
+PaymentInitiationPaymentGetRequest -- APIClientID  :  client_id
+PaymentInitiationPaymentGetRequest -- APISecret  :  secret
+
+class PaymentInitiationPaymentGetResponse {
+  request_id  : RequestID
+
+}
+PaymentInitiationPaymentGetResponse -- RequestID  :  request_id
+PaymentInitiationPayment <|-- PaymentInitiationPaymentGetResponse
+
+class PaymentInitiationPayment {
+  payment_id * : string
+  amount * : PaymentAmount
+  status * : PaymentInitiationPaymentStatus
+  recipient_id * : string
+  reference * : string
+  adjusted_reference  : string
+  last_status_update * : date-time
+  schedule  : ExternalPaymentScheduleGet
+  refund_details  : ExternalPaymentRefundDetails
+  bacs * : SenderBACSNullable
+  iban * : string
+  initiated_refunds  : array[] of PaymentInitiationRefund
+  wallet_id  : string
+  scheme  : PaymentScheme
+  adjusted_scheme  : PaymentScheme
+
+}
+PaymentInitiationPayment -- PaymentAmount  :  amount
+PaymentInitiationPayment -- PaymentInitiationPaymentStatus  :  status
+PaymentInitiationPayment -- ExternalPaymentScheduleGet  :  schedule
+PaymentInitiationPayment -- ExternalPaymentRefundDetails  :  refund_details
+PaymentInitiationPayment -- SenderBACSNullable  :  bacs
+PaymentInitiationPayment *-- PaymentInitiationRefund  :  initiated_refunds
+PaymentInitiationPayment -- PaymentScheme  :  scheme
+PaymentInitiationPayment -- PaymentScheme  :  adjusted_scheme
+
+class PaymentInitiationRefund {
+  refund_id * : string
+  amount * : PaymentAmount
+  status * : enum
+  last_status_update * : date-time
+
+}
+PaymentInitiationRefund -- PaymentAmount  :  amount
+
+class PaymentInitiationPaymentTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  payment_id * : string
+
+}
+PaymentInitiationPaymentTokenCreateRequest -- APIClientID  :  client_id
+PaymentInitiationPaymentTokenCreateRequest -- APISecret  :  secret
+
+class PaymentInitiationPaymentTokenCreateResponse {
+  payment_token * : string
+  payment_token_expiration_time * : date-time
+  request_id * : RequestID
+
+}
+PaymentInitiationPaymentTokenCreateResponse -- RequestID  :  request_id
+
+class PaymentInitiationPaymentListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  count  : integer
+  cursor  : date-time
+
+}
+PaymentInitiationPaymentListRequest -- APIClientID  :  client_id
+PaymentInitiationPaymentListRequest -- APISecret  :  secret
+
+class PaymentInitiationPaymentListResponse {
+  payments * : array[] of PaymentInitiationPayment
+  next_cursor * : date-time
+  request_id * : RequestID
+
+}
+PaymentInitiationPaymentListResponse *-- PaymentInitiationPayment  :  payments
+PaymentInitiationPaymentListResponse -- RequestID  :  request_id
+
+class AssetReportCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_tokens * : array[] of AccessToken
+  days_requested * : integer
+  options  : AssetReportCreateRequestOptions
+
+}
+AssetReportCreateRequest -- APIClientID  :  client_id
+AssetReportCreateRequest -- APISecret  :  secret
+AssetReportCreateRequest *-- AccessToken  :  access_tokens
+AssetReportCreateRequest -- AssetReportCreateRequestOptions  :  options
+
+class AssetReportCreateRequestOptions {
+  client_report_id  : string
+  webhook  : string
+  user  : AssetReportUser
+
+}
+AssetReportCreateRequestOptions -- AssetReportUser  :  user
+
+class AssetReportCreateResponse {
+  asset_report_token * : AssetReportToken
+  asset_report_id * : AssetReportId
+  request_id * : RequestID
+
+}
+AssetReportCreateResponse -- AssetReportToken  :  asset_report_token
+AssetReportCreateResponse -- AssetReportId  :  asset_report_id
+AssetReportCreateResponse -- RequestID  :  request_id
+
+class AssetReportRefreshRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  asset_report_token * : AssetReportRefreshAssetReportToken
+  days_requested  : integer
+  options  : AssetReportRefreshRequestOptions
+
+}
+AssetReportRefreshRequest -- APIClientID  :  client_id
+AssetReportRefreshRequest -- APISecret  :  secret
+AssetReportRefreshRequest -- AssetReportRefreshAssetReportToken  :  asset_report_token
+AssetReportRefreshRequest -- AssetReportRefreshRequestOptions  :  options
+
+class AssetReportRefreshRequestOptions {
+  client_report_id  : string
+  webhook  : string
+  user  : AssetReportUser
+
+}
+AssetReportRefreshRequestOptions -- AssetReportUser  :  user
+
+class AssetReportRefreshResponse {
+  asset_report_id * : AssetReportId
+  asset_report_token * : AssetReportToken
+  request_id * : RequestID
+
+}
+AssetReportRefreshResponse -- AssetReportId  :  asset_report_id
+AssetReportRefreshResponse -- AssetReportToken  :  asset_report_token
+AssetReportRefreshResponse -- RequestID  :  request_id
+
+class AssetReportRemoveRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  asset_report_token * : AssetReportToken
+
+}
+AssetReportRemoveRequest -- APIClientID  :  client_id
+AssetReportRemoveRequest -- APISecret  :  secret
+AssetReportRemoveRequest -- AssetReportToken  :  asset_report_token
+
+class AssetReportRemoveResponse {
+  removed * : boolean
+  request_id * : RequestID
+
+}
+AssetReportRemoveResponse -- RequestID  :  request_id
+
+class AssetReportFilterRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  asset_report_token * : AssetReportToken
+  account_ids_to_exclude * : array[] of strings
+
+}
+AssetReportFilterRequest -- APIClientID  :  client_id
+AssetReportFilterRequest -- APISecret  :  secret
+AssetReportFilterRequest -- AssetReportToken  :  asset_report_token
+
+class AssetReportFilterResponse {
+  asset_report_token * : AssetReportToken
+  asset_report_id * : AssetReportId
+  request_id * : RequestID
+
+}
+AssetReportFilterResponse -- AssetReportToken  :  asset_report_token
+AssetReportFilterResponse -- AssetReportId  :  asset_report_id
+AssetReportFilterResponse -- RequestID  :  request_id
+
+class AssetReportGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  asset_report_token * : AssetReportToken
+  include_insights  : boolean
+
+}
+AssetReportGetRequest -- APIClientID  :  client_id
+AssetReportGetRequest -- APISecret  :  secret
+AssetReportGetRequest -- AssetReportToken  :  asset_report_token
+
+class AssetReportGetResponse {
+  report * : AssetReport
+  warnings * : array[] of Warning
+  request_id * : RequestID
+
+}
+AssetReportGetResponse -- AssetReport  :  report
+AssetReportGetResponse *-- Warning  :  warnings
+AssetReportGetResponse -- RequestID  :  request_id
+
+class AssetReportPDFGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  asset_report_token * : AssetReportToken
+
+}
+AssetReportPDFGetRequest -- APIClientID  :  client_id
+AssetReportPDFGetRequest -- APISecret  :  secret
+AssetReportPDFGetRequest -- AssetReportToken  :  asset_report_token
+
+class AssetReportAuditCopyCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  asset_report_token * : AssetReportToken
+  auditor_id * : string
+
+}
+AssetReportAuditCopyCreateRequest -- APIClientID  :  client_id
+AssetReportAuditCopyCreateRequest -- APISecret  :  secret
+AssetReportAuditCopyCreateRequest -- AssetReportToken  :  asset_report_token
+
+class AssetReportAuditCopyCreateResponse {
+  audit_copy_token * : string
+  request_id * : RequestID
+
+}
+AssetReportAuditCopyCreateResponse -- RequestID  :  request_id
+
+class AssetReportAuditCopyRemoveRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  audit_copy_token * : string
+
+}
+AssetReportAuditCopyRemoveRequest -- APIClientID  :  client_id
+AssetReportAuditCopyRemoveRequest -- APISecret  :  secret
+
+class AssetReportAuditCopyRemoveResponse {
+  removed * : boolean
+  request_id * : RequestID
+
+}
+AssetReportAuditCopyRemoveResponse -- RequestID  :  request_id
+
+class InvestmentsHoldingsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  options  : InvestmentHoldingsGetRequestOptions
+
+}
+InvestmentsHoldingsGetRequest -- APIClientID  :  client_id
+InvestmentsHoldingsGetRequest -- APISecret  :  secret
+InvestmentsHoldingsGetRequest -- AccessToken  :  access_token
+InvestmentsHoldingsGetRequest -- InvestmentHoldingsGetRequestOptions  :  options
+
+class InvestmentHoldingsGetRequestOptions {
+  account_ids  : array[] of strings
+
+}
+
+class InvestmentsHoldingsGetResponse {
+  accounts * : array[] of AccountBase
+  holdings * : array[] of Holding
+  securities * : array[] of Security
+  item * : Item
+  request_id * : RequestID
+
+}
+InvestmentsHoldingsGetResponse *-- AccountBase  :  accounts
+InvestmentsHoldingsGetResponse *-- Holding  :  holdings
+InvestmentsHoldingsGetResponse *-- Security  :  securities
+InvestmentsHoldingsGetResponse -- Item  :  item
+InvestmentsHoldingsGetResponse -- RequestID  :  request_id
+
+class InvestmentsTransactionsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  start_date * : date
+  end_date * : date
+  options  : InvestmentsTransactionsGetRequestOptions
+
+}
+InvestmentsTransactionsGetRequest -- APIClientID  :  client_id
+InvestmentsTransactionsGetRequest -- APISecret  :  secret
+InvestmentsTransactionsGetRequest -- AccessToken  :  access_token
+InvestmentsTransactionsGetRequest -- InvestmentsTransactionsGetRequestOptions  :  options
+
+class InvestmentsTransactionsGetRequestOptions {
+  account_ids  : array[] of strings
+  count  : integer
+  offset  : integer
+
+}
+
+class InvestmentsTransactionsGetResponse {
+  item * : Item
+  accounts * : array[] of AccountBase
+  securities * : array[] of Security
+  investment_transactions * : array[] of InvestmentTransaction
+  total_investment_transactions * : integer
+  request_id * : RequestID
+
+}
+InvestmentsTransactionsGetResponse -- Item  :  item
+InvestmentsTransactionsGetResponse *-- AccountBase  :  accounts
+InvestmentsTransactionsGetResponse *-- Security  :  securities
+InvestmentsTransactionsGetResponse *-- InvestmentTransaction  :  investment_transactions
+InvestmentsTransactionsGetResponse -- RequestID  :  request_id
+
+class ProcessorTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+  processor * : enum
+
+}
+ProcessorTokenCreateRequest -- APIClientID  :  client_id
+ProcessorTokenCreateRequest -- APISecret  :  secret
+ProcessorTokenCreateRequest -- AccessToken  :  access_token
+
+class ProcessorTokenCreateResponse {
+  processor_token * : string
+  request_id * : RequestID
+
+}
+ProcessorTokenCreateResponse -- RequestID  :  request_id
+
+class ProcessorStripeBankAccountTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+
+}
+ProcessorStripeBankAccountTokenCreateRequest -- APIClientID  :  client_id
+ProcessorStripeBankAccountTokenCreateRequest -- APISecret  :  secret
+ProcessorStripeBankAccountTokenCreateRequest -- AccessToken  :  access_token
+
+class ProcessorStripeBankAccountTokenCreateResponse {
+  stripe_bank_account_token * : string
+  request_id * : RequestID
+
+}
+ProcessorStripeBankAccountTokenCreateResponse -- RequestID  :  request_id
+
+class ProcessorApexProcessorTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+
+}
+ProcessorApexProcessorTokenCreateRequest -- APIClientID  :  client_id
+ProcessorApexProcessorTokenCreateRequest -- APISecret  :  secret
+ProcessorApexProcessorTokenCreateRequest -- AccessToken  :  access_token
+
+class DepositSwitchCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  target_access_token * : string
+  target_account_id * : string
+  country_code  : enum
+  options  : DepositSwitchCreateRequestOptions
+
+}
+DepositSwitchCreateRequest -- APIClientID  :  client_id
+DepositSwitchCreateRequest -- APISecret  :  secret
+DepositSwitchCreateRequest -- DepositSwitchCreateRequestOptions  :  options
+
+class DepositSwitchCreateRequestOptions {
+  webhook  : string
+  transaction_item_access_tokens  : array[] of AccessToken
+
+}
+DepositSwitchCreateRequestOptions *-- AccessToken  :  transaction_item_access_tokens
+
+class DepositSwitchCreateResponse {
+  deposit_switch_id * : string
+  request_id * : RequestID
+
+}
+DepositSwitchCreateResponse -- RequestID  :  request_id
+
+class ItemImportRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  products * : array[] of Products
+  user_auth * : ItemImportRequestUserAuth
+  options  : ItemImportRequestOptions
+
+}
+ItemImportRequest -- APIClientID  :  client_id
+ItemImportRequest -- APISecret  :  secret
+ItemImportRequest *-- Products  :  products
+ItemImportRequest -- ItemImportRequestUserAuth  :  user_auth
+ItemImportRequest -- ItemImportRequestOptions  :  options
+
+class ItemImportRequestOptions {
+  webhook  : string
+
+}
+
+class ItemImportRequestUserAuth {
+  user_id * : string
+  auth_token * : string
+
+}
+
+class ItemImportResponse {
+  access_token * : AccessToken
+  request_id * : RequestID
+
+}
+ItemImportResponse -- AccessToken  :  access_token
+ItemImportResponse -- RequestID  :  request_id
+
+class DepositSwitchTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  deposit_switch_id * : string
+
+}
+DepositSwitchTokenCreateRequest -- APIClientID  :  client_id
+DepositSwitchTokenCreateRequest -- APISecret  :  secret
+
+class DepositSwitchTokenCreateResponse {
+  deposit_switch_token * : string
+  deposit_switch_token_expiration_time * : string
+  request_id * : RequestID
+
+}
+DepositSwitchTokenCreateResponse -- RequestID  :  request_id
+
+class LinkTokenGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  link_token * : string
+
+}
+LinkTokenGetRequest -- APIClientID  :  client_id
+LinkTokenGetRequest -- APISecret  :  secret
+
+class LinkTokenCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  client_name * : string
+  language * : string
+  country_codes * : array[] of CountryCode
+  user * : LinkTokenCreateRequestUser
+  products  : array[] of Products
+  webhook  : string
+  access_token  : string
+  link_customization_name  : string
+  redirect_uri  : string
+  android_package_name  : string
+  account_filters  : LinkTokenAccountFilters
+  eu_config  : LinkTokenEUConfig
+  institution_id  : string
+  payment_initiation  : LinkTokenCreateRequestPaymentInitiation
+  deposit_switch  : LinkTokenCreateRequestDepositSwitch
+  income_verification  : LinkTokenCreateRequestIncomeVerification
+  auth  : LinkTokenCreateRequestAuth
+  transfer  : LinkTokenCreateRequestTransfer
+  update  : LinkTokenCreateRequestUpdate
+
+}
+LinkTokenCreateRequest -- APIClientID  :  client_id
+LinkTokenCreateRequest -- APISecret  :  secret
+LinkTokenCreateRequest *-- CountryCode  :  country_codes
+LinkTokenCreateRequest -- LinkTokenCreateRequestUser  :  user
+LinkTokenCreateRequest *-- Products  :  products
+LinkTokenCreateRequest -- LinkTokenAccountFilters  :  account_filters
+LinkTokenCreateRequest -- LinkTokenEUConfig  :  eu_config
+LinkTokenCreateRequest -- LinkTokenCreateRequestPaymentInitiation  :  payment_initiation
+LinkTokenCreateRequest -- LinkTokenCreateRequestDepositSwitch  :  deposit_switch
+LinkTokenCreateRequest -- LinkTokenCreateRequestIncomeVerification  :  income_verification
+LinkTokenCreateRequest -- LinkTokenCreateRequestAuth  :  auth
+LinkTokenCreateRequest -- LinkTokenCreateRequestTransfer  :  transfer
+LinkTokenCreateRequest -- LinkTokenCreateRequestUpdate  :  update
+
+class LinkTokenAccountFilters {
+  depository  : DepositoryFilter
+  credit  : CreditFilter
+  loan  : LoanFilter
+  investment  : InvestmentFilter
+
+}
+LinkTokenAccountFilters -- DepositoryFilter  :  depository
+LinkTokenAccountFilters -- CreditFilter  :  credit
+LinkTokenAccountFilters -- LoanFilter  :  loan
+LinkTokenAccountFilters -- InvestmentFilter  :  investment
+
+class LinkTokenEUConfig {
+  headless  : boolean
+
+}
+
+class LinkTokenCreateRequestPaymentInitiation {
+  payment_id * : string
+
+}
+
+class LinkTokenCreateRequestDepositSwitch {
+  deposit_switch_id * : string
+
+}
+
+class LinkTokenCreateRequestTransfer {
+  intent_id  : string
+
+}
+
+class LinkTokenCreateRequestAuth {
+  flow_type * : enum
+
+}
+
+class LinkTokenCreateRequestUser {
+  client_user_id * : string
+  legal_name  : string
+  phone_number  : string
+  phone_number_verified_time  : date-time
+  email_address  : string
+  email_address_verified_time  : date-time
+  ssn  : string
+  date_of_birth  : date
+
+}
+
+class LinkTokenCreateRequestUpdate {
+  account_selection_enabled  : boolean
+
+}
+
+class LinkTokenCreateRequestAccountSubtypes {
+  depository  : object
+  credit  : object
+  loan  : object
+  investment  : object
+
+}
+
+class LinkTokenGetResponse {
+  link_token * : string
+  created_at * : date-time
+  expiration * : date-time
+  metadata * : LinkTokenGetMetadataResponse
+  request_id * : RequestID
+
+}
+LinkTokenGetResponse -- LinkTokenGetMetadataResponse  :  metadata
+LinkTokenGetResponse -- RequestID  :  request_id
+
+class LinkTokenGetMetadataResponse {
+  initial_products * : array[] of Products
+  webhook * : string
+  country_codes * : array[] of CountryCode
+  language * : string
+  account_filters  : AccountFiltersResponse
+  redirect_uri * : string
+  client_name * : string
+
+}
+LinkTokenGetMetadataResponse *-- Products  :  initial_products
+LinkTokenGetMetadataResponse *-- CountryCode  :  country_codes
+LinkTokenGetMetadataResponse -- AccountFiltersResponse  :  account_filters
+
+class LinkTokenCreateResponse {
+  link_token * : string
+  expiration * : date-time
+  request_id * : RequestID
+
+}
+LinkTokenCreateResponse -- RequestID  :  request_id
+
+class Item {
+  item_id * : string
+  institution_id  : string
+  webhook * : string
+  error * : Error
+  available_products * : array[] of Products
+  billed_products * : array[] of Products
+  products  : array[] of Products
+  consent_expiration_time * : date-time
+  update_type * : enum
+
+}
+Item -- Error  :  error
+Item *-- Products  :  available_products
+Item *-- Products  :  billed_products
+Item *-- Products  :  products
+
+class PlaidError {
+
+}
+Error <|-- PlaidError
+
+class Error {
+  error_type * : enum
+  error_code * : string
+  error_message * : string
+  display_message * : string
+  request_id  : string
+  causes  : array[] of 
+  status  : number
+  documentation_url  : string
+  suggested_action  : string
+
+}
+
+class ItemStatusNullable {
+
+}
+ItemStatus <|-- ItemStatusNullable
+
+class ItemStatusTransactions {
+  last_successful_update  : date-time
+  last_failed_update  : date-time
+
+}
+
+class ItemStatusInvestments {
+  last_successful_update  : date-time
+  last_failed_update  : date-time
+
+}
+
+class ItemStatusLastWebhook {
+  sent_at  : date-time
+  code_sent  : string
+
+}
+
+class ItemStatus {
+  investments  : ItemStatusInvestments
+  transactions  : ItemStatusTransactions
+  last_webhook  : ItemStatusLastWebhook
+
+}
+ItemStatus -- ItemStatusInvestments  :  investments
+ItemStatus -- ItemStatusTransactions  :  transactions
+ItemStatus -- ItemStatusLastWebhook  :  last_webhook
+
+class AccountBase {
+  account_id * : string
+  balances * : AccountBalance
+  mask * : string
+  name * : string
+  official_name * : string
+  type * : AccountType
+  subtype * : AccountSubtype
+  verification_status  : enum
+
+}
+AccountBase -- AccountBalance  :  balances
+AccountBase -- AccountType  :  type
+AccountBase -- AccountSubtype  :  subtype
+
+class AccountBalance {
+  available * : number
+  current * : number
+  limit * : number
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+  last_updated_datetime  : date-time
+
+}
+
+class NumbersACH {
+  account_id * : string
+  account * : string
+  routing * : string
+  wire_routing * : string
+
+}
+
+class NumbersACHNullable {
+
+}
+NumbersACH <|-- NumbersACHNullable
+
+class NumbersEFT {
+  account_id * : string
+  account * : string
+  institution * : string
+  branch * : string
+
+}
+
+class NumbersEFTNullable {
+
+}
+NumbersEFT <|-- NumbersEFTNullable
+
+class NumbersInternational {
+  account_id * : string
+  iban * : string
+  bic * : string
+
+}
+
+class NumbersInternationalNullable {
+
+}
+NumbersInternational <|-- NumbersInternationalNullable
+
+class NumbersBACS {
+  account_id * : string
+  account * : string
+  sort_code * : string
+
+}
+
+class NumbersBACSNullable {
+
+}
+NumbersBACS <|-- NumbersBACSNullable
+
+class RecipientBACS {
+  account  : string
+  sort_code  : string
+
+}
+
+class RecipientBACSNullable {
+
+}
+RecipientBACS <|-- RecipientBACSNullable
+
+class SenderBACSNullable {
+
+}
+RecipientBACS <|-- SenderBACSNullable
+
+class PaymentInitiationOptionalRestrictionBacs {
+
+}
+RecipientBACS <|-- PaymentInitiationOptionalRestrictionBacs
+
+class RemovedTransaction {
+  transaction_id  : string
+
+}
+
+class TransactionBase {
+  transaction_type  : enum
+  pending_transaction_id  : string
+  category_id  : string
+  category  : array[] of strings
+  location  : Location
+  payment_meta  : PaymentMeta
+  account_owner  : string
+  name  : string
+  original_description  : string
+  account_id * : string
+  amount * : number
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+  date * : date
+  pending * : boolean
+  transaction_id * : string
+  merchant_name  : string
+  check_number  : string
+
+}
+TransactionBase -- Location  :  location
+TransactionBase -- PaymentMeta  :  payment_meta
+
+class Transaction {
+  payment_channel * : enum
+  authorized_date * : date
+  authorized_datetime * : date-time
+  datetime * : date-time
+  transaction_code * : TransactionCode
+  personal_finance_category  : undefined
+
+}
+Transaction -- TransactionCode  :  transaction_code
+TransactionBase <|-- Transaction
+
+class Location {
+  address * : string
+  city * : string
+  region * : string
+  postal_code * : string
+  country * : string
+  lat * : number
+  lon * : number
+  store_number * : string
+
+}
+
+class TransactionStream {
+  account_id * : string
+  stream_id * : string
+  category_id * : string
+  category * : array[] of strings
+  description * : string
+  first_date * : date
+  last_date * : date
+  frequency * : RecurringTransactionFrequency
+  transaction_ids * : array[] of strings
+  average_amount * : TransactionStreamAmount
+  is_active * : boolean
+
+}
+TransactionStream -- RecurringTransactionFrequency  :  frequency
+TransactionStream -- TransactionStreamAmount  :  average_amount
+
+class TransactionStreamAmount {
+  amount  : number
+  iso_currency_code  : string
+  unofficial_currency_code  : string
+
+}
+
+class Institution {
+  institution_id * : string
+  name * : string
+  products * : array[] of Products
+  country_codes * : array[] of CountryCode
+  url  : string
+  primary_color  : string
+  logo  : string
+  routing_numbers * : array[] of strings
+  oauth * : boolean
+  status  : InstitutionStatus
+  payment_initiation_metadata  : PaymentInitiationMetadata
+  auth_metadata  : AuthMetadata
+
+}
+Institution *-- Products  :  products
+Institution *-- CountryCode  :  country_codes
+Institution -- InstitutionStatus  :  status
+Institution -- PaymentInitiationMetadata  :  payment_initiation_metadata
+Institution -- AuthMetadata  :  auth_metadata
+
+class InstitutionStatus {
+  item_logins * : ProductStatus
+  transactions_updates * : ProductStatus
+  auth * : ProductStatus
+  identity * : ProductStatus
+  investments_updates * : ProductStatus
+  liabilities_updates  : ProductStatus
+  liabilities  : ProductStatus
+  investments  : ProductStatus
+  health_incidents  : array[] of HealthIncident
+
+}
+InstitutionStatus -- ProductStatus  :  item_logins
+InstitutionStatus -- ProductStatus  :  transactions_updates
+InstitutionStatus -- ProductStatus  :  auth
+InstitutionStatus -- ProductStatus  :  identity
+InstitutionStatus -- ProductStatus  :  investments_updates
+InstitutionStatus -- ProductStatus  :  liabilities_updates
+InstitutionStatus -- ProductStatus  :  liabilities
+InstitutionStatus -- ProductStatus  :  investments
+InstitutionStatus *-- HealthIncident  :  health_incidents
+
+class PaymentMeta {
+  reference_number * : string
+  ppd_id * : string
+  payee * : string
+  by_order_of * : string
+  payer * : string
+  payment_method * : string
+  payment_processor * : string
+  reason * : string
+
+}
+
+class Category {
+  category_id * : string
+  group * : string
+  hierarchy * : array[] of strings
+
+}
+
+class PersonalFinanceCategory {
+  primary * : string
+  detailed * : string
+
+}
+
+class TransactionsRemovedWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  error  : PlaidError
+  removed_transactions * : array[] of strings
+  item_id * : ItemId
+
+}
+TransactionsRemovedWebhook -- PlaidError  :  error
+TransactionsRemovedWebhook -- ItemId  :  item_id
+
+class DefaultUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  error  : PlaidError
+  new_transactions * : number
+  item_id * : string
+
+}
+DefaultUpdateWebhook -- PlaidError  :  error
+
+class HistoricalUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  error  : PlaidError
+  new_transactions * : number
+  item_id * : ItemId
+
+}
+HistoricalUpdateWebhook -- PlaidError  :  error
+HistoricalUpdateWebhook -- ItemId  :  item_id
+
+class InitialUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  error  : string
+  new_transactions * : number
+  item_id * : ItemId
+
+}
+InitialUpdateWebhook -- ItemId  :  item_id
+
+class PhoneNumber {
+  data * : string
+  primary * : boolean
+  type * : enum
+
+}
+
+class Email {
+  data * : string
+  primary * : boolean
+  type * : enum
+
+}
+
+class Address {
+  data * : AddressData
+  primary  : boolean
+
+}
+Address -- AddressData  :  data
+
+class AddressNullable {
+
+}
+Address <|-- AddressNullable
+
+class AddressDataNullable {
+
+}
+AddressData <|-- AddressDataNullable
+
+class AddressData {
+  city * : string
+  region * : string
+  street * : string
+  postal_code * : string
+  country * : string
+
+}
+
+class HistoricalBalance {
+  date * : date
+  current * : number
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+
+}
+
+class Owner {
+  names * : array[] of strings
+  phone_numbers * : array[] of PhoneNumber
+  emails * : array[] of Email
+  addresses * : array[] of Address
+
+}
+Owner *-- PhoneNumber  :  phone_numbers
+Owner *-- Email  :  emails
+Owner *-- Address  :  addresses
+
+class OwnerOverride {
+  names * : array[] of strings
+  phone_numbers * : array[] of PhoneNumber
+  emails * : array[] of Email
+  addresses * : array[] of Address
+
+}
+OwnerOverride *-- PhoneNumber  :  phone_numbers
+OwnerOverride *-- Email  :  emails
+OwnerOverride *-- Address  :  addresses
+
+class LiabilitiesObject {
+  credit * : array[] of CreditCardLiability
+  mortgage * : array[] of MortgageLiability
+  student * : array[] of StudentLoan
+
+}
+LiabilitiesObject *-- CreditCardLiability  :  credit
+LiabilitiesObject *-- MortgageLiability  :  mortgage
+LiabilitiesObject *-- StudentLoan  :  student
+
+class StudentLoan {
+  account_id * : string
+  account_number * : string
+  disbursement_dates * : array[] of strings
+  expected_payoff_date * : date
+  guarantor * : string
+  interest_rate_percentage * : number
+  is_overdue * : boolean
+  last_payment_amount * : number
+  last_payment_date * : date
+  last_statement_issue_date * : date
+  loan_name * : string
+  loan_status * : StudentLoanStatus
+  minimum_payment_amount * : number
+  next_payment_due_date * : date
+  origination_date * : date
+  origination_principal_amount * : number
+  outstanding_interest_amount * : number
+  payment_reference_number * : string
+  pslf_status * : PSLFStatus
+  repayment_plan * : StudentRepaymentPlan
+  sequence_number * : string
+  servicer_address * : ServicerAddressData
+  ytd_interest_paid * : number
+  ytd_principal_paid * : number
+
+}
+StudentLoan -- StudentLoanStatus  :  loan_status
+StudentLoan -- PSLFStatus  :  pslf_status
+StudentLoan -- StudentRepaymentPlan  :  repayment_plan
+StudentLoan -- ServicerAddressData  :  servicer_address
+
+class CreditCardLiability {
+  account_id * : string
+  aprs * : array[] of APR
+  is_overdue * : boolean
+  last_payment_amount * : number
+  last_payment_date * : date
+  last_statement_issue_date * : date
+  last_statement_balance * : number
+  minimum_payment_amount * : number
+  next_payment_due_date * : date
+
+}
+CreditCardLiability *-- APR  :  aprs
+
+class MortgageLiability {
+  account_id * : string
+  account_number * : string
+  current_late_fee * : number
+  escrow_balance * : number
+  has_pmi * : boolean
+  has_prepayment_penalty * : boolean
+  interest_rate * : MortgageInterestRate
+  last_payment_amount * : number
+  last_payment_date * : date
+  loan_type_description * : string
+  loan_term * : string
+  maturity_date * : date
+  next_monthly_payment * : number
+  next_payment_due_date * : date
+  origination_date * : date
+  origination_principal_amount * : number
+  past_due_amount * : number
+  property_address * : MortgagePropertyAddress
+  ytd_interest_paid * : number
+  ytd_principal_paid * : number
+
+}
+MortgageLiability -- MortgageInterestRate  :  interest_rate
+MortgageLiability -- MortgagePropertyAddress  :  property_address
+
+class MortgageInterestRate {
+  percentage * : number
+  type * : string
+
+}
+
+class MortgagePropertyAddress {
+  city * : string
+  country * : string
+  postal_code * : string
+  region * : string
+  street * : string
+
+}
+
+class StudentLoanStatus {
+  end_date * : date
+  type * : enum
+
+}
+
+class StudentRepaymentPlan {
+  description * : string
+  type * : enum
+
+}
+
+class PSLFStatus {
+  estimated_eligibility_date * : date
+  payments_made * : number
+  payments_remaining * : number
+
+}
+
+class ServicerAddressData {
+  city * : string
+  region * : string
+  street * : string
+  postal_code * : string
+  country * : string
+
+}
+
+class APR {
+  apr_percentage * : number
+  apr_type * : enum
+  balance_subject_to_apr * : number
+  interest_charge_amount * : number
+
+}
+
+class AuthMetadata {
+  supported_methods * : AuthSupportedMethods
+
+}
+AuthMetadata -- AuthSupportedMethods  :  supported_methods
+
+class AuthSupportedMethods {
+  instant_auth * : boolean
+  instant_match * : boolean
+  automated_micro_deposits * : boolean
+
+}
+
+class PaymentInitiationMetadata {
+  supports_international_payments * : boolean
+  maximum_payment_amount * : object
+  supports_refund_details * : boolean
+  standing_order_metadata * : PaymentInitiationStandingOrderMetadata
+
+}
+PaymentInitiationMetadata -- PaymentInitiationStandingOrderMetadata  :  standing_order_metadata
+
+class PaymentInitiationStandingOrderMetadata {
+  supports_standing_order_end_date * : boolean
+  supports_standing_order_negative_execution_days * : boolean
+  valid_standing_order_intervals * : array[] of PaymentScheduleInterval
+
+}
+PaymentInitiationStandingOrderMetadata *-- PaymentScheduleInterval  :  valid_standing_order_intervals
+
+class PaymentInitiationAddress {
+  street * : array[] of strings
+  city * : string
+  postal_code * : string
+  country * : string
+
+}
+
+class ExternalPaymentScheduleBase {
+  interval  : PaymentScheduleInterval
+  interval_execution_day  : integer
+  start_date  : date
+  end_date  : date
+  adjusted_start_date  : date
+
+}
+ExternalPaymentScheduleBase -- PaymentScheduleInterval  :  interval
+
+class ExternalPaymentScheduleRequest {
+
+}
+ExternalPaymentScheduleBase <|-- ExternalPaymentScheduleRequest
+
+class ExternalPaymentOptions {
+  request_refund_details  : boolean
+  iban  : string
+  bacs  : PaymentInitiationOptionalRestrictionBacs
+  wallet_id  : string
+  scheme  : PaymentScheme
+  scheme_automatic_downgrade  : boolean
+
+}
+ExternalPaymentOptions -- PaymentInitiationOptionalRestrictionBacs  :  bacs
+ExternalPaymentOptions -- PaymentScheme  :  scheme
+
+class ExternalPaymentRefundDetails {
+  name * : string
+  iban * : string
+  bacs * : RecipientBACSNullable
+
+}
+ExternalPaymentRefundDetails -- RecipientBACSNullable  :  bacs
+
+class ExternalPaymentScheduleGet {
+
+}
+ExternalPaymentScheduleBase <|-- ExternalPaymentScheduleGet
+
+class ProductStatus {
+  status * : enum
+  last_status_change * : date-time
+  breakdown * : ProductStatusBreakdown
+
+}
+ProductStatus -- ProductStatusBreakdown  :  breakdown
+
+class ProductStatusBreakdown {
+  success * : number
+  error_plaid * : number
+  error_institution * : number
+  refresh_interval  : enum
+
+}
+
+class UserCustomPassword {
+  version  : string
+  seed * : string
+  override_accounts * : array[] of OverrideAccounts
+  mfa * : MFA
+  recaptcha * : string
+  force_error * : string
+
+}
+UserCustomPassword *-- OverrideAccounts  :  override_accounts
+UserCustomPassword -- MFA  :  mfa
+
+class MFA {
+  type * : string
+  question_rounds * : number
+  questions_per_round * : number
+  selection_rounds * : number
+  selections_per_question * : number
+
+}
+
+class OverrideAccounts {
+  type * : OverrideAccountType
+  subtype * : AccountSubtype
+  starting_balance * : number
+  force_available_balance * : number
+  currency * : string
+  meta * : Meta
+  numbers * : Numbers
+  transactions * : array[] of TransactionOverride
+  holdings  : HoldingsOverride
+  investment_transactions  : Investments_TransactionsOverride
+  identity * : OwnerOverride
+  liability * : LiabilityOverride
+  inflow_model * : InflowModel
+  income  : IncomeOverride
+
+}
+OverrideAccounts -- OverrideAccountType  :  type
+OverrideAccounts -- AccountSubtype  :  subtype
+OverrideAccounts -- Meta  :  meta
+OverrideAccounts -- Numbers  :  numbers
+OverrideAccounts *-- TransactionOverride  :  transactions
+OverrideAccounts -- HoldingsOverride  :  holdings
+OverrideAccounts -- Investments_TransactionsOverride  :  investment_transactions
+OverrideAccounts -- OwnerOverride  :  identity
+OverrideAccounts -- LiabilityOverride  :  liability
+OverrideAccounts -- InflowModel  :  inflow_model
+OverrideAccounts -- IncomeOverride  :  income
+
+class Meta {
+  name * : string
+  official_name * : string
+  limit * : number
+
+}
+
+class Numbers {
+  account  : string
+  ach_routing  : string
+  ach_wire_routing  : string
+  eft_institution  : string
+  eft_branch  : string
+  international_bic  : string
+  international_iban  : string
+  bacs_sort_code  : string
+
+}
+
+class TransactionOverride {
+  date_transacted * : date
+  date_posted * : date
+  amount * : number
+  description * : string
+  currency  : string
+
+}
+
+class SecurityOverride {
+  isin  : string
+  cusip  : string
+  sedol  : string
+  name  : string
+  ticker_symbol  : string
+  currency  : string
+
+}
+
+class HoldingsOverride {
+  institution_price * : number
+  institution_price_as_of  : date
+  cost_basis  : number
+  quantity * : number
+  currency * : string
+  security * : SecurityOverride
+
+}
+HoldingsOverride -- SecurityOverride  :  security
+
+class Investments_TransactionsOverride {
+  date * : date
+  name * : string
+  quantity * : number
+  price * : number
+  fees  : number
+  type * : string
+  currency * : string
+  security  : SecurityOverride
+
+}
+Investments_TransactionsOverride -- SecurityOverride  :  security
+
+class LiabilityOverride {
+  type * : string
+  purchase_apr * : number
+  cash_apr * : number
+  balance_transfer_apr * : number
+  special_apr * : number
+  last_payment_amount * : number
+  minimum_payment_amount * : number
+  is_overdue * : boolean
+  origination_date * : date
+  principal * : number
+  nominal_apr * : number
+  interest_capitalization_grace_period_months * : number
+  repayment_model * : StudentLoanRepaymentModel
+  expected_payoff_date * : date
+  guarantor * : string
+  is_federal * : boolean
+  loan_name * : string
+  loan_status * : StudentLoanStatus
+  payment_reference_number * : string
+  pslf_status * : PSLFStatus
+  repayment_plan_description * : string
+  repayment_plan_type * : string
+  sequence_number * : string
+  servicer_address * : Address
+
+}
+LiabilityOverride -- StudentLoanRepaymentModel  :  repayment_model
+LiabilityOverride -- StudentLoanStatus  :  loan_status
+LiabilityOverride -- PSLFStatus  :  pslf_status
+LiabilityOverride -- Address  :  servicer_address
+
+class StudentLoanRepaymentModel {
+  type * : string
+  non_repayment_months * : number
+  repayment_months * : number
+
+}
+
+class InflowModel {
+  type * : string
+  income_amount * : number
+  payment_day_of_month * : number
+  transaction_name * : string
+  statement_day_of_month * : string
+
+}
+
+class IncomeOverride {
+  paystubs  : array[] of PaystubOverride
+
+}
+IncomeOverride *-- PaystubOverride  :  paystubs
+
+class PaystubOverride {
+  employer  : object
+  employee  : object
+  income_breakdown  : array[] of IncomeBreakdown
+  pay_period_details  : PayPeriodDetails
+
+}
+PaystubOverride *-- IncomeBreakdown  :  income_breakdown
+PaystubOverride -- PayPeriodDetails  :  pay_period_details
+
+class AutomaticallyVerifiedWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  account_id * : string
+  item_id * : ItemId
+
+}
+AutomaticallyVerifiedWebhook -- ItemId  :  item_id
+
+class JWTHeader {
+  id * : string
+
+}
+
+class VerificationExpiredWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  account_id * : string
+
+}
+VerificationExpiredWebhook -- ItemId  :  item_id
+
+class WebhookUpdateAcknowledgedWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  new_webhook_url * : string
+  error  : PlaidError
+
+}
+WebhookUpdateAcknowledgedWebhook -- ItemId  :  item_id
+WebhookUpdateAcknowledgedWebhook -- PlaidError  :  error
+
+class PendingExpirationWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  consent_expiration_time * : date-time
+
+}
+PendingExpirationWebhook -- ItemId  :  item_id
+
+class ItemErrorWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  error * : PlaidError
+
+}
+ItemErrorWebhook -- ItemId  :  item_id
+ItemErrorWebhook -- PlaidError  :  error
+
+class ItemProductReadyWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  error  : PlaidError
+
+}
+ItemProductReadyWebhook -- ItemId  :  item_id
+ItemProductReadyWebhook -- PlaidError  :  error
+
+class Recaptcha_RequiredError {
+  error_type * : string
+  error_code * : string
+  display_message * : string
+  http_code * : string
+  link_user_experience * : string
+  common_causes * : string
+  troubleshooting_steps * : string
+
+}
+
+class BankTransfersEventsUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+
+}
+
+class InvestmentsDefaultUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  error  : PlaidError
+  new_investments_transactions * : number
+  canceled_investments_transactions * : number
+
+}
+InvestmentsDefaultUpdateWebhook -- ItemId  :  item_id
+InvestmentsDefaultUpdateWebhook -- PlaidError  :  error
+
+class HoldingsDefaultUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  error  : PlaidError
+  new_holdings * : number
+  updated_holdings * : number
+
+}
+HoldingsDefaultUpdateWebhook -- ItemId  :  item_id
+HoldingsDefaultUpdateWebhook -- PlaidError  :  error
+
+class LiabilitiesDefaultUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  error * : PlaidError
+  account_ids_with_new_liabilities * : array[] of strings
+  account_ids_with_updated_liabilities * : object
+
+}
+LiabilitiesDefaultUpdateWebhook -- ItemId  :  item_id
+LiabilitiesDefaultUpdateWebhook -- PlaidError  :  error
+
+class AssetsProductReadyWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  asset_report_id * : string
+
+}
+
+class AssetsErrorWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  error * : PlaidError
+  asset_report_id * : string
+
+}
+AssetsErrorWebhook -- PlaidError  :  error
+
+class Cause {
+  item_id * : ItemId
+  error * : PlaidError
+
+}
+Cause -- ItemId  :  item_id
+Cause -- PlaidError  :  error
+
+class Warning {
+  warning_type * : string
+  warning_code * : enum
+  cause * : Cause
+
+}
+Warning -- Cause  :  cause
+
+class PaymentAmount {
+  currency * : enum
+  value * : number
+
+}
+
+class AssetReportUser {
+  client_user_id  : string
+  first_name  : string
+  middle_name  : string
+  last_name  : string
+  ssn  : string
+  phone_number  : string
+  email  : string
+
+}
+
+class StandaloneCurrencyCodeList {
+  iso_currency_code * : string
+  unofficial_currency_code * : UnofficialCurrencyCodeList
+
+}
+StandaloneCurrencyCodeList -- UnofficialCurrencyCodeList  :  unofficial_currency_code
+
+class UnofficialCurrencyCodeList {
+  ADA * : string
+  BAT * : string
+  BCH * : string
+  BNB * : string
+  BTC * : string
+  BTG * : string
+  BSV  : string
+  CNH * : string
+  DASH * : string
+  DOGE * : string
+  ETC * : string
+  ETH * : string
+  GBX * : string
+  LSK * : string
+  NEO * : string
+  OMG * : string
+  QTUM * : string
+  USDT * : string
+  XLM * : string
+  XMR * : string
+  XRP * : string
+  ZEC * : string
+  ZRX * : string
+
+}
+
+class StandaloneAccountType {
+  depository * : DepositoryAccount
+  credit * : CreditAccount
+  loan * : LoanAccount
+  investment * : InvestmentAccountSubtype
+  other * : string
+
+}
+StandaloneAccountType -- DepositoryAccount  :  depository
+StandaloneAccountType -- CreditAccount  :  credit
+StandaloneAccountType -- LoanAccount  :  loan
+StandaloneAccountType -- InvestmentAccountSubtype  :  investment
+
+class DepositoryAccount {
+  checking * : string
+  savings * : string
+  hsa * : string
+  cd * : string
+  money market * : string
+  paypal * : string
+  prepaid * : string
+  cash management * : string
+  ebt * : string
+
+}
+
+class CreditAccount {
+  credit card * : string
+  paypal * : string
+
+}
+
+class LoanAccount {
+  auto * : string
+  business * : string
+  commercial * : string
+  construction * : string
+  consumer * : string
+  home equity * : string
+  loan * : string
+  mortgage * : string
+  overdraft * : string
+  line of credit * : string
+  student * : string
+  other * : string
+
+}
+
+class InvestmentAccountSubtype {
+  529 * : string
+  401a * : string
+  401k * : string
+  403B * : string
+  457b * : string
+  brokerage * : string
+  cash isa * : string
+  education savings account * : string
+  fixed annuity * : string
+  gic * : string
+  health reimbursement arrangement * : string
+  hsa * : string
+  ira * : string
+  isa * : string
+  keogh * : string
+  lif * : string
+  life insurance * : string
+  lira * : string
+  lrif * : string
+  lrsp * : string
+  mutual fund * : string
+  non-taxable brokerage account * : string
+  other * : string
+  other annuity * : string
+  other insurance * : string
+  pension * : string
+  prif * : string
+  profit sharing plan * : string
+  qshr * : string
+  rdsp * : string
+  resp * : string
+  retirement * : string
+  rlif * : string
+  roth * : string
+  roth 401k * : string
+  rrif * : string
+  rrsp * : string
+  sarsep * : string
+  sep ira * : string
+  simple ira * : string
+  sipp * : string
+  stock plan * : string
+  tfsa * : string
+  trust * : string
+  ugma * : string
+  utma * : string
+  variable annuity * : string
+
+}
+
+class AssetReport {
+  asset_report_id * : AssetReportId
+  client_report_id * : string
+  date_generated * : date-time
+  days_requested * : number
+  user * : AssetReportUser
+  items * : array[] of AssetReportItem
+
+}
+AssetReport -- AssetReportId  :  asset_report_id
+AssetReport -- AssetReportUser  :  user
+AssetReport *-- AssetReportItem  :  items
+
+class AssetReportItem {
+  item_id * : ItemId
+  institution_name * : string
+  institution_id * : string
+  date_last_updated * : date-time
+  accounts * : array[] of AccountAssets
+
+}
+AssetReportItem -- ItemId  :  item_id
+AssetReportItem *-- AccountAssets  :  accounts
+
+class PaymentStatusUpdateWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  payment_id * : string
+  new_payment_status * : PaymentInitiationPaymentStatus
+  old_payment_status * : PaymentInitiationPaymentStatus
+  original_reference * : string
+  adjusted_reference  : string
+  original_start_date * : date
+  adjusted_start_date * : date
+  timestamp * : date-time
+  error  : PlaidError
+
+}
+PaymentStatusUpdateWebhook -- PaymentInitiationPaymentStatus  :  new_payment_status
+PaymentStatusUpdateWebhook -- PaymentInitiationPaymentStatus  :  old_payment_status
+PaymentStatusUpdateWebhook -- PlaidError  :  error
+
+class Holding {
+  account_id * : string
+  security_id * : string
+  institution_price * : number
+  institution_price_as_of * : date
+  institution_value * : number
+  cost_basis * : number
+  quantity * : number
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+
+}
+
+class Security {
+  security_id * : string
+  isin * : string
+  cusip * : string
+  sedol * : string
+  institution_security_id * : string
+  institution_id * : string
+  proxy_security_id * : string
+  name * : string
+  ticker_symbol * : string
+  is_cash_equivalent * : boolean
+  type * : string
+  close_price * : number
+  close_price_as_of * : date
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+
+}
+
+class InvestmentTransaction {
+  investment_transaction_id * : string
+  cancel_transaction_id  : string
+  account_id * : string
+  security_id * : string
+  date * : date
+  name * : string
+  quantity * : number
+  amount * : number
+  price * : number
+  fees * : number
+  type * : enum
+  subtype * : enum
+  iso_currency_code * : string
+  unofficial_currency_code * : string
+
+}
+
+class StandaloneInvestmentTransactionType {
+  buy * : StandaloneInvestmentTransactionBuyType
+  sell * : StandaloneInvestmentTransactionSellType
+  cancel * : string
+  cash * : StandaloneInvestmentTransactionCashType
+  fee * : StandaloneInvestmentTransactionFeeType
+  transfer * : StandaloneInvestmentTransactionTransferType
+
+}
+StandaloneInvestmentTransactionType -- StandaloneInvestmentTransactionBuyType  :  buy
+StandaloneInvestmentTransactionType -- StandaloneInvestmentTransactionSellType  :  sell
+StandaloneInvestmentTransactionType -- StandaloneInvestmentTransactionCashType  :  cash
+StandaloneInvestmentTransactionType -- StandaloneInvestmentTransactionFeeType  :  fee
+StandaloneInvestmentTransactionType -- StandaloneInvestmentTransactionTransferType  :  transfer
+
+class StandaloneInvestmentTransactionBuyType {
+  assignment  : string
+  contribution  : string
+  buy  : string
+  buy to cover  : string
+  dividend reinvestment  : string
+  interest reinvestment  : string
+  long-term capital gain reinvestment  : string
+  short-term capital gain reinvestment  : string
+
+}
+
+class StandaloneInvestmentTransactionCashType {
+  account fee  : string
+  contribution  : string
+  deposit  : string
+  dividend  : string
+  stock distribution  : string
+  interest  : string
+  legal fee  : string
+  long-term capital gain  : string
+  management fee  : string
+  margin expense  : string
+  non-qualified dividend  : string
+  non-resident tax  : string
+  pending credit  : string
+  pending debit  : string
+  qualified dividend  : string
+  short-term capital gain  : string
+  tax  : string
+  tax withheld  : string
+  transfer fee  : string
+  trust fee  : string
+  unqualified gain  : string
+  withdrawal  : string
+
+}
+
+class StandaloneInvestmentTransactionFeeType {
+  account fee  : string
+  adjustment  : string
+  dividend  : string
+  interest  : string
+  interest receivable  : string
+  long-term capital gain  : string
+  legal fee  : string
+  management fee  : string
+  margin expense  : string
+  non-qualified dividend  : string
+  non-resident tax  : string
+  qualified dividend  : string
+  return of principal  : string
+  short-term capital gain  : string
+  stock distribution  : string
+  tax  : string
+  tax withheld  : string
+  transfer fee  : string
+  trust fee  : string
+  unqualified gain  : string
+
+}
+
+class StandaloneInvestmentTransactionSellType {
+  distribution  : string
+  exercise  : string
+  sell  : string
+  sell short  : string
+
+}
+
+class StandaloneInvestmentTransactionTransferType {
+  assignment  : string
+  adjustment  : string
+  exercise  : string
+  expire  : string
+  merger  : string
+  spin off  : string
+  split  : string
+  transfer  : string
+
+}
+
+class UserPermissionRevokedWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  item_id * : ItemId
+  error  : PlaidError
+
+}
+UserPermissionRevokedWebhook -- ItemId  :  item_id
+UserPermissionRevokedWebhook -- PlaidError  :  error
+
+class DepositSwitchGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  deposit_switch_id * : string
+
+}
+DepositSwitchGetRequest -- APIClientID  :  client_id
+DepositSwitchGetRequest -- APISecret  :  secret
+
+class DepositSwitchGetResponse {
+  deposit_switch_id * : string
+  target_account_id * : string
+  target_item_id * : string
+  state * : enum
+  switch_method  : enum
+  account_has_multiple_allocations * : boolean
+  is_allocated_remainder * : boolean
+  percent_allocated * : number
+  amount_allocated * : number
+  employer_name  : string
+  employer_id  : string
+  institution_name  : string
+  institution_id  : string
+  date_created * : date
+  date_completed * : date
+  request_id * : RequestID
+
+}
+DepositSwitchGetResponse -- RequestID  :  request_id
+
+class DepositSwitchStateUpdateWebhook {
+  webhook_type  : string
+  webhook_code  : string
+  state  : string
+  deposit_switch_id  : string
+
+}
+
+class AssetReportAuditCopyGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  audit_copy_token * : string
+
+}
+AssetReportAuditCopyGetRequest -- APIClientID  :  client_id
+AssetReportAuditCopyGetRequest -- APISecret  :  secret
+
+class TransferGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  transfer_id * : TransferID
+
+}
+TransferGetRequest -- APIClientID  :  client_id
+TransferGetRequest -- APISecret  :  secret
+TransferGetRequest -- TransferID  :  transfer_id
+
+class BankTransferGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  bank_transfer_id * : BankTransferID
+
+}
+BankTransferGetRequest -- APIClientID  :  client_id
+BankTransferGetRequest -- APISecret  :  secret
+BankTransferGetRequest -- BankTransferID  :  bank_transfer_id
+
+class TransferGetResponse {
+  transfer * : Transfer
+  request_id * : RequestID
+
+}
+TransferGetResponse -- Transfer  :  transfer
+TransferGetResponse -- RequestID  :  request_id
+
+class BankTransferGetResponse {
+  bank_transfer * : BankTransfer
+  request_id * : RequestID
+
+}
+BankTransferGetResponse -- BankTransfer  :  bank_transfer
+BankTransferGetResponse -- RequestID  :  request_id
+
+class Transfer {
+  id * : TransferID
+  ach_class * : ACHClass
+  account_id * : string
+  type * : TransferType
+  user * : TransferUserInResponse
+  amount * : TransferAmount
+  description * : string
+  created * : date-time
+  status * : TransferStatus
+  sweep_status  : TransferSweepStatus
+  network * : TransferNetwork
+  cancellable * : boolean
+  failure_reason * : TransferFailure
+  metadata * : TransferMetadata
+  origination_account_id * : string
+  guarantee_decision  : TransferAuthorizationGuaranteeDecision
+  guarantee_decision_rationale  : TransferAuthorizationGuaranteeDecisionRationale
+  iso_currency_code * : string
+
+}
+Transfer -- TransferID  :  id
+Transfer -- ACHClass  :  ach_class
+Transfer -- TransferType  :  type
+Transfer -- TransferUserInResponse  :  user
+Transfer -- TransferAmount  :  amount
+Transfer -- TransferStatus  :  status
+Transfer -- TransferSweepStatus  :  sweep_status
+Transfer -- TransferNetwork  :  network
+Transfer -- TransferFailure  :  failure_reason
+Transfer -- TransferMetadata  :  metadata
+Transfer -- TransferAuthorizationGuaranteeDecision  :  guarantee_decision
+Transfer -- TransferAuthorizationGuaranteeDecisionRationale  :  guarantee_decision_rationale
+
+class BankTransfer {
+  id * : BankTransferID
+  ach_class * : ACHClass
+  account_id * : string
+  type * : BankTransferType
+  user * : BankTransferUser
+  amount * : BankTransferAmount
+  iso_currency_code * : string
+  description * : string
+  created * : date-time
+  status * : BankTransferStatus
+  network * : BankTransferNetwork
+  cancellable * : boolean
+  failure_reason * : BankTransferFailure
+  custom_tag * : string
+  metadata * : BankTransferMetadata
+  origination_account_id * : string
+  direction * : BankTransferDirection
+
+}
+BankTransfer -- BankTransferID  :  id
+BankTransfer -- ACHClass  :  ach_class
+BankTransfer -- BankTransferType  :  type
+BankTransfer -- BankTransferUser  :  user
+BankTransfer -- BankTransferAmount  :  amount
+BankTransfer -- BankTransferStatus  :  status
+BankTransfer -- BankTransferNetwork  :  network
+BankTransfer -- BankTransferFailure  :  failure_reason
+BankTransfer -- BankTransferMetadata  :  metadata
+BankTransfer -- BankTransferDirection  :  direction
+
+class TransferIntentGetFailureReason {
+  error_type  : string
+  error_code  : string
+  error_message  : string
+
+}
+
+class TransferUserInRequest {
+  legal_name * : string
+  phone_number  : string
+  email_address  : string
+  address  : TransferUserAddressInRequest
+
+}
+TransferUserInRequest -- TransferUserAddressInRequest  :  address
+
+class TransferUserInResponse {
+  legal_name * : string
+  phone_number * : string
+  email_address * : string
+  address * : TransferUserAddressInResponse
+
+}
+TransferUserInResponse -- TransferUserAddressInResponse  :  address
+
+class TransferUserAddressInRequest {
+  street  : string
+  city  : string
+  region  : string
+  postal_code  : string
+  country  : string
+
+}
+
+class TransferUserAddressInResponse {
+  street * : string
+  city * : string
+  region * : string
+  postal_code * : string
+  country * : string
+
+}
+
+class BankTransferUser {
+  legal_name * : string
+  email_address  : string
+  routing_number  : string
+
+}
+
+class TransferAuthorizationDecisionRationale {
+  code * : enum
+  description * : string
+
+}
+
+class TransferAuthorizationGuaranteeDecisionRationale {
+  code * : enum
+  description * : string
+
+}
+
+class TransferAuthorizationProposedTransfer {
+  ach_class * : ACHClass
+  account_id * : string
+  type * : TransferType
+  user * : TransferUserInResponse
+  amount * : TransferAmount
+  network * : string
+  origination_account_id * : string
+  iso_currency_code * : string
+
+}
+TransferAuthorizationProposedTransfer -- ACHClass  :  ach_class
+TransferAuthorizationProposedTransfer -- TransferType  :  type
+TransferAuthorizationProposedTransfer -- TransferUserInResponse  :  user
+TransferAuthorizationProposedTransfer -- TransferAmount  :  amount
+
+class TransferAuthorizationDevice {
+  ip_address  : string
+  user_agent  : string
+
+}
+
+class TransferMetadata {
+
+}
+
+class BankTransferMetadata {
+
+}
+
+class TransferFailure {
+  ach_return_code  : string
+  description  : string
+
+}
+
+class BankTransferFailure {
+  ach_return_code  : string
+  description  : string
+
+}
+
+class TransferAuthorizationCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : TransferAccessToken
+  account_id * : string
+  type * : TransferType
+  network * : TransferNetwork
+  amount * : TransferAmount
+  ach_class * : ACHClass
+  user * : TransferUserInRequest
+  device  : TransferAuthorizationDevice
+  origination_account_id  : string
+  iso_currency_code  : string
+
+}
+TransferAuthorizationCreateRequest -- APIClientID  :  client_id
+TransferAuthorizationCreateRequest -- APISecret  :  secret
+TransferAuthorizationCreateRequest -- TransferAccessToken  :  access_token
+TransferAuthorizationCreateRequest -- TransferType  :  type
+TransferAuthorizationCreateRequest -- TransferNetwork  :  network
+TransferAuthorizationCreateRequest -- TransferAmount  :  amount
+TransferAuthorizationCreateRequest -- ACHClass  :  ach_class
+TransferAuthorizationCreateRequest -- TransferUserInRequest  :  user
+TransferAuthorizationCreateRequest -- TransferAuthorizationDevice  :  device
+
+class TransferCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  idempotency_key * : TransferCreateIdempotencyKey
+  access_token * : TransferAccessToken
+  account_id * : string
+  authorization_id * : TransferAuthorizationID
+  type * : TransferType
+  network * : TransferNetwork
+  amount * : TransferAmount
+  description * : string
+  ach_class * : ACHClass
+  user * : TransferUserInRequest
+  metadata  : TransferMetadata
+  origination_account_id  : string
+  iso_currency_code  : string
+
+}
+TransferCreateRequest -- APIClientID  :  client_id
+TransferCreateRequest -- APISecret  :  secret
+TransferCreateRequest -- TransferCreateIdempotencyKey  :  idempotency_key
+TransferCreateRequest -- TransferAccessToken  :  access_token
+TransferCreateRequest -- TransferAuthorizationID  :  authorization_id
+TransferCreateRequest -- TransferType  :  type
+TransferCreateRequest -- TransferNetwork  :  network
+TransferCreateRequest -- TransferAmount  :  amount
+TransferCreateRequest -- ACHClass  :  ach_class
+TransferCreateRequest -- TransferUserInRequest  :  user
+TransferCreateRequest -- TransferMetadata  :  metadata
+
+class BankTransferCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  idempotency_key * : BankTransferIdempotencyKey
+  access_token * : BankTransferAccessToken
+  account_id * : string
+  type * : BankTransferType
+  network * : BankTransferNetwork
+  amount * : BankTransferAmount
+  iso_currency_code * : string
+  description * : string
+  ach_class  : ACHClass
+  user * : BankTransferUser
+  custom_tag  : string
+  metadata  : BankTransferMetadata
+  origination_account_id  : string
+
+}
+BankTransferCreateRequest -- APIClientID  :  client_id
+BankTransferCreateRequest -- APISecret  :  secret
+BankTransferCreateRequest -- BankTransferIdempotencyKey  :  idempotency_key
+BankTransferCreateRequest -- BankTransferAccessToken  :  access_token
+BankTransferCreateRequest -- BankTransferType  :  type
+BankTransferCreateRequest -- BankTransferNetwork  :  network
+BankTransferCreateRequest -- BankTransferAmount  :  amount
+BankTransferCreateRequest -- ACHClass  :  ach_class
+BankTransferCreateRequest -- BankTransferUser  :  user
+BankTransferCreateRequest -- BankTransferMetadata  :  metadata
+
+class TransferAuthorizationCreateResponse {
+  authorization * : TransferAuthorization
+  request_id * : RequestID
+
+}
+TransferAuthorizationCreateResponse -- TransferAuthorization  :  authorization
+TransferAuthorizationCreateResponse -- RequestID  :  request_id
+
+class TransferAuthorization {
+  id * : TransferAuthorizationID
+  created * : date-time
+  decision * : enum
+  decision_rationale * : TransferAuthorizationDecisionRationale
+  guarantee_decision * : TransferAuthorizationGuaranteeDecision
+  guarantee_decision_rationale * : TransferAuthorizationGuaranteeDecisionRationale
+  proposed_transfer * : TransferAuthorizationProposedTransfer
+
+}
+TransferAuthorization -- TransferAuthorizationID  :  id
+TransferAuthorization -- TransferAuthorizationDecisionRationale  :  decision_rationale
+TransferAuthorization -- TransferAuthorizationGuaranteeDecision  :  guarantee_decision
+TransferAuthorization -- TransferAuthorizationGuaranteeDecisionRationale  :  guarantee_decision_rationale
+TransferAuthorization -- TransferAuthorizationProposedTransfer  :  proposed_transfer
+
+class TransferCreateResponse {
+  transfer * : Transfer
+  request_id * : RequestID
+
+}
+TransferCreateResponse -- Transfer  :  transfer
+TransferCreateResponse -- RequestID  :  request_id
+
+class BankTransferCreateResponse {
+  bank_transfer * : BankTransfer
+  request_id * : RequestID
+
+}
+BankTransferCreateResponse -- BankTransfer  :  bank_transfer
+BankTransferCreateResponse -- RequestID  :  request_id
+
+class TransferListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  start_date  : date-time
+  end_date  : date-time
+  count  : integer
+  offset  : integer
+  origination_account_id  : string
+
+}
+TransferListRequest -- APIClientID  :  client_id
+TransferListRequest -- APISecret  :  secret
+
+class BankTransferListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  start_date  : date-time
+  end_date  : date-time
+  count  : integer
+  offset  : integer
+  origination_account_id  : string
+  direction  : BankTransferDirection
+
+}
+BankTransferListRequest -- APIClientID  :  client_id
+BankTransferListRequest -- APISecret  :  secret
+BankTransferListRequest -- BankTransferDirection  :  direction
+
+class TransferListResponse {
+  transfers * : array[] of Transfer
+  request_id * : RequestID
+
+}
+TransferListResponse *-- Transfer  :  transfers
+TransferListResponse -- RequestID  :  request_id
+
+class BankTransferListResponse {
+  bank_transfers * : array[] of BankTransfer
+  request_id * : RequestID
+
+}
+BankTransferListResponse *-- BankTransfer  :  bank_transfers
+BankTransferListResponse -- RequestID  :  request_id
+
+class TransferCancelRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  transfer_id * : TransferID
+
+}
+TransferCancelRequest -- APIClientID  :  client_id
+TransferCancelRequest -- APISecret  :  secret
+TransferCancelRequest -- TransferID  :  transfer_id
+
+class BankTransferCancelRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  bank_transfer_id * : BankTransferID
+
+}
+BankTransferCancelRequest -- APIClientID  :  client_id
+BankTransferCancelRequest -- APISecret  :  secret
+BankTransferCancelRequest -- BankTransferID  :  bank_transfer_id
+
+class TransferCancelResponse {
+  request_id * : RequestID
+
+}
+TransferCancelResponse -- RequestID  :  request_id
+
+class BankTransferCancelResponse {
+  request_id * : RequestID
+
+}
+BankTransferCancelResponse -- RequestID  :  request_id
+
+class TransferEventListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  start_date  : date-time
+  end_date  : date-time
+  transfer_id  : string
+  account_id  : string
+  transfer_type  : enum
+  event_types  : array[] of TransferEventType
+  sweep_id  : TransferSweepID
+  count  : integer
+  offset  : integer
+  origination_account_id  : string
+
+}
+TransferEventListRequest -- APIClientID  :  client_id
+TransferEventListRequest -- APISecret  :  secret
+TransferEventListRequest *-- TransferEventType  :  event_types
+TransferEventListRequest -- TransferSweepID  :  sweep_id
+
+class BankTransferEventListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  start_date  : date-time
+  end_date  : date-time
+  bank_transfer_id  : string
+  account_id  : string
+  bank_transfer_type  : enum
+  event_types  : array[] of BankTransferEventType
+  count  : integer
+  offset  : integer
+  origination_account_id  : string
+  direction  : enum
+
+}
+BankTransferEventListRequest -- APIClientID  :  client_id
+BankTransferEventListRequest -- APISecret  :  secret
+BankTransferEventListRequest *-- BankTransferEventType  :  event_types
+
+class TransferEvent {
+  event_id * : integer
+  timestamp * : date-time
+  event_type * : TransferEventType
+  account_id * : string
+  transfer_id * : TransferID
+  origination_account_id * : string
+  transfer_type * : TransferType
+  transfer_amount * : TransferAmount
+  failure_reason * : TransferFailure
+  sweep_id  : TransferSweepID
+  sweep_amount  : TransferSweepAmount
+
+}
+TransferEvent -- TransferEventType  :  event_type
+TransferEvent -- TransferID  :  transfer_id
+TransferEvent -- TransferType  :  transfer_type
+TransferEvent -- TransferAmount  :  transfer_amount
+TransferEvent -- TransferFailure  :  failure_reason
+TransferEvent -- TransferSweepID  :  sweep_id
+TransferEvent -- TransferSweepAmount  :  sweep_amount
+
+class BankTransferEvent {
+  event_id * : integer
+  timestamp * : date-time
+  event_type * : BankTransferEventType
+  account_id * : string
+  bank_transfer_id * : BankTransferID
+  origination_account_id * : string
+  bank_transfer_type * : BankTransferType
+  bank_transfer_amount * : string
+  bank_transfer_iso_currency_code * : string
+  failure_reason * : BankTransferFailure
+  direction * : BankTransferDirection
+
+}
+BankTransferEvent -- BankTransferEventType  :  event_type
+BankTransferEvent -- BankTransferID  :  bank_transfer_id
+BankTransferEvent -- BankTransferType  :  bank_transfer_type
+BankTransferEvent -- BankTransferFailure  :  failure_reason
+BankTransferEvent -- BankTransferDirection  :  direction
+
+class TransferEventListResponse {
+  transfer_events * : array[] of TransferEvent
+  request_id * : RequestID
+
+}
+TransferEventListResponse *-- TransferEvent  :  transfer_events
+TransferEventListResponse -- RequestID  :  request_id
+
+class BankTransferEventListResponse {
+  bank_transfer_events * : array[] of BankTransferEvent
+  request_id * : RequestID
+
+}
+BankTransferEventListResponse *-- BankTransferEvent  :  bank_transfer_events
+BankTransferEventListResponse -- RequestID  :  request_id
+
+class BankTransferEventSyncRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  after_id * : integer
+  count  : integer
+
+}
+BankTransferEventSyncRequest -- APIClientID  :  client_id
+BankTransferEventSyncRequest -- APISecret  :  secret
+
+class TransferEventSyncRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  after_id * : integer
+  count  : integer
+
+}
+TransferEventSyncRequest -- APIClientID  :  client_id
+TransferEventSyncRequest -- APISecret  :  secret
+
+class BankTransferEventSyncResponse {
+  bank_transfer_events * : array[] of BankTransferEvent
+  request_id * : RequestID
+
+}
+BankTransferEventSyncResponse *-- BankTransferEvent  :  bank_transfer_events
+BankTransferEventSyncResponse -- RequestID  :  request_id
+
+class TransferEventSyncResponse {
+  transfer_events * : array[] of TransferEvent
+  request_id * : RequestID
+
+}
+TransferEventSyncResponse *-- TransferEvent  :  transfer_events
+TransferEventSyncResponse -- RequestID  :  request_id
+
+class BankTransferSweepGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  sweep_id * : string
+
+}
+BankTransferSweepGetRequest -- APIClientID  :  client_id
+BankTransferSweepGetRequest -- APISecret  :  secret
+
+class TransferSweepGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  sweep_id * : TransferSweepID
+
+}
+TransferSweepGetRequest -- APIClientID  :  client_id
+TransferSweepGetRequest -- APISecret  :  secret
+TransferSweepGetRequest -- TransferSweepID  :  sweep_id
+
+class BankTransferSweepGetResponse {
+  sweep * : BankTransferSweep
+  request_id * : RequestID
+
+}
+BankTransferSweepGetResponse -- BankTransferSweep  :  sweep
+BankTransferSweepGetResponse -- RequestID  :  request_id
+
+class TransferSweepGetResponse {
+  sweep * : TransferSweep
+  request_id * : RequestID
+
+}
+TransferSweepGetResponse -- TransferSweep  :  sweep
+TransferSweepGetResponse -- RequestID  :  request_id
+
+class BankTransferSweepListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  origination_account_id  : string
+  start_time  : date-time
+  end_time  : date-time
+  count  : integer
+
+}
+BankTransferSweepListRequest -- APIClientID  :  client_id
+BankTransferSweepListRequest -- APISecret  :  secret
+
+class TransferSweepListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  start_date  : date-time
+  end_date  : date-time
+  count  : integer
+  offset  : integer
+
+}
+TransferSweepListRequest -- APIClientID  :  client_id
+TransferSweepListRequest -- APISecret  :  secret
+
+class TransferSweepListResponse {
+  sweeps * : array[] of TransferSweep
+  request_id * : RequestID
+
+}
+TransferSweepListResponse *-- TransferSweep  :  sweeps
+TransferSweepListResponse -- RequestID  :  request_id
+
+class BankTransferSweepListResponse {
+  sweeps * : array[] of BankTransferSweep
+  request_id * : RequestID
+
+}
+BankTransferSweepListResponse *-- BankTransferSweep  :  sweeps
+BankTransferSweepListResponse -- RequestID  :  request_id
+
+class BankTransferSweep {
+  id * : string
+  created_at * : date-time
+  amount * : string
+  iso_currency_code * : string
+
+}
+
+class TransferSweep {
+  id * : string
+  created * : date-time
+  amount * : string
+  iso_currency_code * : string
+
+}
+
+class SimulatedTransferSweep {
+
+}
+TransferSweep <|-- SimulatedTransferSweep
+
+class BankTransferBalanceGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  origination_account_id  : string
+
+}
+BankTransferBalanceGetRequest -- APIClientID  :  client_id
+BankTransferBalanceGetRequest -- APISecret  :  secret
+
+class BankTransferBalanceGetResponse {
+  balance * : BankTransferBalance
+  origination_account_id * : string
+  request_id * : RequestID
+
+}
+BankTransferBalanceGetResponse -- BankTransferBalance  :  balance
+BankTransferBalanceGetResponse -- RequestID  :  request_id
+
+class BankTransferBalance {
+  available * : string
+  transactable * : string
+
+}
+
+class BankTransferMigrateAccountRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  account_number * : string
+  routing_number * : string
+  account_type * : string
+
+}
+BankTransferMigrateAccountRequest -- APIClientID  :  client_id
+BankTransferMigrateAccountRequest -- APISecret  :  secret
+
+class BankTransferMigrateAccountResponse {
+  access_token * : string
+  account_id * : string
+  request_id * : RequestID
+
+}
+BankTransferMigrateAccountResponse -- RequestID  :  request_id
+
+class TransferRepaymentListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  start_date  : date-time
+  end_date  : date-time
+  count  : integer
+  offset  : integer
+
+}
+TransferRepaymentListRequest -- APIClientID  :  client_id
+TransferRepaymentListRequest -- APISecret  :  secret
+
+class TransferRepaymentListResponse {
+  repayments * : array[] of TransferRepayment
+  request_id * : RequestID
+
+}
+TransferRepaymentListResponse *-- TransferRepayment  :  repayments
+TransferRepaymentListResponse -- RequestID  :  request_id
+
+class TransferRepayment {
+  repayment_id * : string
+  created * : date-time
+  amount * : string
+  iso_currency_code * : string
+
+}
+
+class TransferRepaymentReturnListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  repayment_id  : string
+  count  : integer
+  offset  : integer
+
+}
+TransferRepaymentReturnListRequest -- APIClientID  :  client_id
+TransferRepaymentReturnListRequest -- APISecret  :  secret
+
+class TransferRepaymentReturnListResponse {
+  repayment_returns * : array[] of TransferRepaymentReturn
+  request_id * : RequestID
+
+}
+TransferRepaymentReturnListResponse *-- TransferRepaymentReturn  :  repayment_returns
+TransferRepaymentReturnListResponse -- RequestID  :  request_id
+
+class TransferRepaymentReturn {
+  transfer_id * : string
+  event_id * : integer
+  amount * : string
+  iso_currency_code * : string
+
+}
+
+class TransferIntentCreateRequest {
+  client_id * : APIClientID
+  secret * : APISecret
+  account_id  : string
+  mode * : TransferIntentCreateMode
+  amount * : TransferAmount
+  description * : string
+  ach_class * : ACHClass
+  origination_account_id  : string
+  user * : TransferUserInRequest
+  metadata  : TransferMetadata
+  iso_currency_code  : string
+
+}
+TransferIntentCreateRequest -- APIClientID  :  client_id
+TransferIntentCreateRequest -- APISecret  :  secret
+TransferIntentCreateRequest -- TransferIntentCreateMode  :  mode
+TransferIntentCreateRequest -- TransferAmount  :  amount
+TransferIntentCreateRequest -- ACHClass  :  ach_class
+TransferIntentCreateRequest -- TransferUserInRequest  :  user
+TransferIntentCreateRequest -- TransferMetadata  :  metadata
+
+class TransferIntentCreate {
+  id * : string
+  created * : date-time
+  status * : enum
+  account_id  : string
+  origination_account_id * : string
+  amount * : TransferAmount
+  mode * : TransferIntentCreateMode
+  ach_class * : ACHClass
+  user * : TransferUserInResponse
+  description * : string
+  metadata  : TransferMetadata
+  iso_currency_code * : string
+
+}
+TransferIntentCreate -- TransferAmount  :  amount
+TransferIntentCreate -- TransferIntentCreateMode  :  mode
+TransferIntentCreate -- ACHClass  :  ach_class
+TransferIntentCreate -- TransferUserInResponse  :  user
+TransferIntentCreate -- TransferMetadata  :  metadata
+
+class TransferIntentCreateResponse {
+  transfer_intent * : TransferIntentCreate
+  request_id * : RequestID
+
+}
+TransferIntentCreateResponse -- TransferIntentCreate  :  transfer_intent
+TransferIntentCreateResponse -- RequestID  :  request_id
+
+class TransferIntentGetRequest {
+  client_id * : APIClientID
+  secret * : APISecret
+  transfer_intent_id * : string
+
+}
+TransferIntentGetRequest -- APIClientID  :  client_id
+TransferIntentGetRequest -- APISecret  :  secret
+
+class TransferIntentGet {
+  id * : string
+  created * : date-time
+  status * : enum
+  transfer_id * : string
+  failure_reason * : TransferIntentGetFailureReason
+  authorization_decision * : enum
+  authorization_decision_rationale * : TransferAuthorizationDecisionRationale
+  account_id  : string
+  origination_account_id * : string
+  amount * : TransferAmount
+  mode * : TransferIntentCreateMode
+  ach_class * : ACHClass
+  user * : TransferUserInResponse
+  description * : string
+  metadata  : TransferMetadata
+  iso_currency_code * : string
+
+}
+TransferIntentGet -- TransferIntentGetFailureReason  :  failure_reason
+TransferIntentGet -- TransferAuthorizationDecisionRationale  :  authorization_decision_rationale
+TransferIntentGet -- TransferAmount  :  amount
+TransferIntentGet -- TransferIntentCreateMode  :  mode
+TransferIntentGet -- ACHClass  :  ach_class
+TransferIntentGet -- TransferUserInResponse  :  user
+TransferIntentGet -- TransferMetadata  :  metadata
+
+class TransferIntentGetResponse {
+  transfer_intent * : TransferIntentGet
+  request_id * : RequestID
+
+}
+TransferIntentGetResponse -- TransferIntentGet  :  transfer_intent
+TransferIntentGetResponse -- RequestID  :  request_id
+
+class SandboxBankTransferSimulateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  bank_transfer_id * : BankTransferID
+  event_type * : string
+  failure_reason  : BankTransferFailure
+
+}
+SandboxBankTransferSimulateRequest -- APIClientID  :  client_id
+SandboxBankTransferSimulateRequest -- APISecret  :  secret
+SandboxBankTransferSimulateRequest -- BankTransferID  :  bank_transfer_id
+SandboxBankTransferSimulateRequest -- BankTransferFailure  :  failure_reason
+
+class SandboxTransferSimulateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  transfer_id * : TransferID
+  event_type * : string
+  failure_reason  : TransferFailure
+
+}
+SandboxTransferSimulateRequest -- APIClientID  :  client_id
+SandboxTransferSimulateRequest -- APISecret  :  secret
+SandboxTransferSimulateRequest -- TransferID  :  transfer_id
+SandboxTransferSimulateRequest -- TransferFailure  :  failure_reason
+
+class SandboxTransferSweepSimulateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+
+}
+SandboxTransferSweepSimulateRequest -- APIClientID  :  client_id
+SandboxTransferSweepSimulateRequest -- APISecret  :  secret
+
+class SandboxBankTransferSimulateResponse {
+  request_id * : RequestID
+
+}
+SandboxBankTransferSimulateResponse -- RequestID  :  request_id
+
+class SandboxTransferSimulateResponse {
+  request_id * : RequestID
+
+}
+SandboxTransferSimulateResponse -- RequestID  :  request_id
+
+class SandboxTransferSweepSimulateResponse {
+  sweep  : SimulatedTransferSweep
+  request_id * : RequestID
+
+}
+SandboxTransferSweepSimulateResponse -- SimulatedTransferSweep  :  sweep
+SandboxTransferSweepSimulateResponse -- RequestID  :  request_id
+
+class SandboxTransferRepaymentSimulateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+
+}
+SandboxTransferRepaymentSimulateRequest -- APIClientID  :  client_id
+SandboxTransferRepaymentSimulateRequest -- APISecret  :  secret
+
+class SandboxTransferRepaymentSimulateResponse {
+  request_id * : RequestID
+
+}
+SandboxTransferRepaymentSimulateResponse -- RequestID  :  request_id
+
+class AccountFiltersResponse {
+  depository  : DepositoryFilter
+  credit  : CreditFilter
+  loan  : LoanFilter
+  investment  : InvestmentFilter
+
+}
+AccountFiltersResponse -- DepositoryFilter  :  depository
+AccountFiltersResponse -- CreditFilter  :  credit
+AccountFiltersResponse -- LoanFilter  :  loan
+AccountFiltersResponse -- InvestmentFilter  :  investment
+
+class InstitutionsSearchAccountFilter {
+  loan  : array[] of AccountSubtype
+  depository  : array[] of AccountSubtype
+  credit  : array[] of AccountSubtype
+  investment  : array[] of AccountSubtype
+
+}
+InstitutionsSearchAccountFilter *-- AccountSubtype  :  loan
+InstitutionsSearchAccountFilter *-- AccountSubtype  :  depository
+InstitutionsSearchAccountFilter *-- AccountSubtype  :  credit
+InstitutionsSearchAccountFilter *-- AccountSubtype  :  investment
+
+class AccountIdentity {
+  owners * : array[] of Owner
+
+}
+AccountIdentity *-- Owner  :  owners
+AccountBase <|-- AccountIdentity
+
+class AccountAssets {
+  days_available * : number
+  transactions * : array[] of AssetReportTransaction
+  owners * : array[] of Owner
+  historical_balances * : array[] of HistoricalBalance
+
+}
+AccountAssets *-- AssetReportTransaction  :  transactions
+AccountAssets *-- Owner  :  owners
+AccountAssets *-- HistoricalBalance  :  historical_balances
+AccountBase <|-- AccountAssets
+
+class DepositoryFilter {
+  account_subtypes * : AccountSubtypes
+
+}
+DepositoryFilter -- AccountSubtypes  :  account_subtypes
+
+class CreditFilter {
+  account_subtypes * : AccountSubtypes
+
+}
+CreditFilter -- AccountSubtypes  :  account_subtypes
+
+class LoanFilter {
+  account_subtypes * : AccountSubtypes
+
+}
+LoanFilter -- AccountSubtypes  :  account_subtypes
+
+class InvestmentFilter {
+  account_subtypes * : AccountSubtypes
+
+}
+InvestmentFilter -- AccountSubtypes  :  account_subtypes
+
+class EmployersSearchRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  query * : string
+  products * : array[] of strings
+
+}
+EmployersSearchRequest -- APIClientID  :  client_id
+EmployersSearchRequest -- APISecret  :  secret
+
+class EmployersSearchResponse {
+  employers * : array[] of Employer
+  request_id * : RequestID
+
+}
+EmployersSearchResponse *-- Employer  :  employers
+EmployersSearchResponse -- RequestID  :  request_id
+
+class Employer {
+  employer_id * : string
+  name * : string
+  address * : AddressDataNullable
+  confidence_score * : number
+
+}
+Employer -- AddressDataNullable  :  address
+
+class IncomeVerificationCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  webhook * : string
+  precheck_id  : string
+  options  : IncomeVerificationCreateRequestOptions
+
+}
+IncomeVerificationCreateRequest -- APIClientID  :  client_id
+IncomeVerificationCreateRequest -- APISecret  :  secret
+IncomeVerificationCreateRequest -- IncomeVerificationCreateRequestOptions  :  options
+
+class IncomeVerificationCreateRequestOptions {
+  access_tokens  : array[] of AccessToken
+
+}
+IncomeVerificationCreateRequestOptions *-- AccessToken  :  access_tokens
+
+class IncomeVerificationCreateResponse {
+  income_verification_id * : string
+  request_id * : RequestID
+
+}
+IncomeVerificationCreateResponse -- RequestID  :  request_id
+
+class IncomeVerificationPrecheckRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  user  : IncomeVerificationPrecheckUser
+  employer  : IncomeVerificationPrecheckEmployer
+  transactions_access_token  : AccessTokenNullable
+  transactions_access_tokens  : array[] of AccessToken
+  us_military_info  : IncomeVerificationPrecheckMilitaryInfo
+
+}
+IncomeVerificationPrecheckRequest -- APIClientID  :  client_id
+IncomeVerificationPrecheckRequest -- APISecret  :  secret
+IncomeVerificationPrecheckRequest -- IncomeVerificationPrecheckUser  :  user
+IncomeVerificationPrecheckRequest -- IncomeVerificationPrecheckEmployer  :  employer
+IncomeVerificationPrecheckRequest -- AccessTokenNullable  :  transactions_access_token
+IncomeVerificationPrecheckRequest *-- AccessToken  :  transactions_access_tokens
+IncomeVerificationPrecheckRequest -- IncomeVerificationPrecheckMilitaryInfo  :  us_military_info
+
+class IncomeVerificationPrecheckEmployer {
+  name  : string
+  address  : IncomeVerificationPrecheckEmployerAddress
+  tax_id  : string
+  url  : string
+
+}
+IncomeVerificationPrecheckEmployer -- IncomeVerificationPrecheckEmployerAddress  :  address
+
+class IncomeVerificationPrecheckEmployerAddress {
+
+}
+IncomeVerificationPrecheckEmployerAddressData <|-- IncomeVerificationPrecheckEmployerAddress
+
+class IncomeVerificationPrecheckEmployerAddressData {
+  city  : string
+  region  : string
+  street  : string
+  postal_code  : string
+  country  : string
+
+}
+
+class IncomeVerificationPrecheckMilitaryInfo {
+  is_active_duty  : boolean
+  branch  : enum
+
+}
+
+class IncomeVerificationPrecheckUser {
+  first_name  : string
+  last_name  : string
+  email_address  : string
+  home_address  : SignalAddressData
+
+}
+IncomeVerificationPrecheckUser -- SignalAddressData  :  home_address
+
+class IncomeVerificationPrecheckResponse {
+  precheck_id * : string
+  request_id * : RequestID
+  confidence * : IncomeVerificationPrecheckConfidence
+
+}
+IncomeVerificationPrecheckResponse -- RequestID  :  request_id
+IncomeVerificationPrecheckResponse -- IncomeVerificationPrecheckConfidence  :  confidence
+
+class LinkTokenCreateRequestIncomeVerification {
+  income_verification_id  : string
+  asset_report_id  : string
+  precheck_id  : string
+  access_tokens  : array[] of AccessToken
+
+}
+LinkTokenCreateRequestIncomeVerification *-- AccessToken  :  access_tokens
+
+class IncomeVerificationStatusWebhook {
+  webhook_type * : string
+  webhook_code * : string
+  income_verification_id * : string
+  item_id * : string
+  verification_status * : string
+
+}
+
+class IncomeVerificationSummaryGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id  : string
+  access_token  : AccessTokenNullable
+
+}
+IncomeVerificationSummaryGetRequest -- APIClientID  :  client_id
+IncomeVerificationSummaryGetRequest -- APISecret  :  secret
+IncomeVerificationSummaryGetRequest -- AccessTokenNullable  :  access_token
+
+class IncomeVerificationSummaryGetResponse {
+  income_summaries * : array[] of IncomeSummary
+  error  : PlaidError
+  request_id * : RequestID
+
+}
+IncomeVerificationSummaryGetResponse *-- IncomeSummary  :  income_summaries
+IncomeVerificationSummaryGetResponse -- PlaidError  :  error
+IncomeVerificationSummaryGetResponse -- RequestID  :  request_id
+
+class IncomeVerificationRefreshRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id  : string
+  access_token  : AccessTokenNullable
+
+}
+IncomeVerificationRefreshRequest -- APIClientID  :  client_id
+IncomeVerificationRefreshRequest -- APISecret  :  secret
+IncomeVerificationRefreshRequest -- AccessTokenNullable  :  access_token
+
+class IncomeVerificationRefreshResponse {
+  request_id * : RequestID
+  verification_refresh_status * : VerificationRefreshStatus
+
+}
+IncomeVerificationRefreshResponse -- RequestID  :  request_id
+IncomeVerificationRefreshResponse -- VerificationRefreshStatus  :  verification_refresh_status
+
+class IncomeSummary {
+  employer_name * : EmployerIncomeSummaryFieldString
+  employee_name * : EmployeeIncomeSummaryFieldString
+  ytd_gross_income * : YTDGrossIncomeSummaryFieldNumber
+  ytd_net_income * : YTDNetIncomeSummaryFieldNumber
+  pay_frequency * : PayFrequency
+  projected_wage * : ProjectedIncomeSummaryFieldNumber
+  verified_transaction * : TransactionData
+
+}
+IncomeSummary -- EmployerIncomeSummaryFieldString  :  employer_name
+IncomeSummary -- EmployeeIncomeSummaryFieldString  :  employee_name
+IncomeSummary -- YTDGrossIncomeSummaryFieldNumber  :  ytd_gross_income
+IncomeSummary -- YTDNetIncomeSummaryFieldNumber  :  ytd_net_income
+IncomeSummary -- PayFrequency  :  pay_frequency
+IncomeSummary -- ProjectedIncomeSummaryFieldNumber  :  projected_wage
+IncomeSummary -- TransactionData  :  verified_transaction
+
+class TransactionData {
+  description * : string
+  amount * : number
+  date * : date
+  account_id * : string
+  transaction_id * : string
+
+}
+
+class IncomeSummaryFieldString {
+  value * : string
+  verification_status * : VerificationStatus
+
+}
+IncomeSummaryFieldString -- VerificationStatus  :  verification_status
+
+class EmployerIncomeSummaryFieldString {
+
+}
+IncomeSummaryFieldString <|-- EmployerIncomeSummaryFieldString
+
+class EmployeeIncomeSummaryFieldString {
+
+}
+IncomeSummaryFieldString <|-- EmployeeIncomeSummaryFieldString
+
+class IncomeSummaryFieldNumber {
+  value * : number
+  verification_status * : VerificationStatus
+
+}
+IncomeSummaryFieldNumber -- VerificationStatus  :  verification_status
+
+class YTDGrossIncomeSummaryFieldNumber {
+
+}
+IncomeSummaryFieldNumber <|-- YTDGrossIncomeSummaryFieldNumber
+
+class YTDNetIncomeSummaryFieldNumber {
+
+}
+IncomeSummaryFieldNumber <|-- YTDNetIncomeSummaryFieldNumber
+
+class ProjectedIncomeSummaryFieldNumber {
+
+}
+IncomeSummaryFieldNumber <|-- ProjectedIncomeSummaryFieldNumber
+
+class PayFrequency {
+  value * : PayFrequencyValue
+  verification_status * : VerificationStatus
+
+}
+PayFrequency -- PayFrequencyValue  :  value
+PayFrequency -- VerificationStatus  :  verification_status
+
+class IncomeVerificationPaystubGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id  : string
+  access_token  : AccessTokenNullable
+
+}
+IncomeVerificationPaystubGetRequest -- APIClientID  :  client_id
+IncomeVerificationPaystubGetRequest -- APISecret  :  secret
+IncomeVerificationPaystubGetRequest -- AccessTokenNullable  :  access_token
+
+class IncomeVerificationPaystubGetResponse {
+  paystub * : Paystub
+  error  : PlaidError
+  request_id * : RequestID
+
+}
+IncomeVerificationPaystubGetResponse -- Paystub  :  paystub
+IncomeVerificationPaystubGetResponse -- PlaidError  :  error
+IncomeVerificationPaystubGetResponse -- RequestID  :  request_id
+
+class IncomeVerificationPaystubsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id  : string
+  access_token  : AccessTokenNullable
+
+}
+IncomeVerificationPaystubsGetRequest -- APIClientID  :  client_id
+IncomeVerificationPaystubsGetRequest -- APISecret  :  secret
+IncomeVerificationPaystubsGetRequest -- AccessTokenNullable  :  access_token
+
+class IncomeVerificationPaystubsGetResponse {
+  document_metadata  : array[] of DocumentMetadata
+  paystubs * : array[] of Paystub
+  error  : PlaidError
+  request_id * : RequestID
+
+}
+IncomeVerificationPaystubsGetResponse *-- DocumentMetadata  :  document_metadata
+IncomeVerificationPaystubsGetResponse *-- Paystub  :  paystubs
+IncomeVerificationPaystubsGetResponse -- PlaidError  :  error
+IncomeVerificationPaystubsGetResponse -- RequestID  :  request_id
+
+class DocumentMetadata {
+  name  : string
+  status  : string
+  doc_id  : string
+  doc_type  : DocType
+
+}
+DocumentMetadata -- DocType  :  doc_type
+
+class Paystub {
+  deductions * : Deductions
+  doc_id * : string
+  earnings * : Earnings
+  employee * : Employee
+  employer * : PaystubEmployer
+  employment_details  : EmploymentDetails
+  net_pay * : NetPay
+  pay_period_details * : PayPeriodDetails
+  paystub_details  : PaystubDetails
+  income_breakdown  : array[] of IncomeBreakdown
+  ytd_earnings  : PaystubYTDDetails
+  verification * : PaystubVerification
+
+}
+Paystub -- Deductions  :  deductions
+Paystub -- Earnings  :  earnings
+Paystub -- Employee  :  employee
+Paystub -- PaystubEmployer  :  employer
+Paystub -- EmploymentDetails  :  employment_details
+Paystub -- NetPay  :  net_pay
+Paystub -- PayPeriodDetails  :  pay_period_details
+Paystub -- PaystubDetails  :  paystub_details
+Paystub *-- IncomeBreakdown  :  income_breakdown
+Paystub -- PaystubYTDDetails  :  ytd_earnings
+Paystub -- PaystubVerification  :  verification
+
+class Deductions {
+  subtotals  : array[] of Total
+  breakdown * : array[] of DeductionsBreakdown
+  totals  : array[] of Total
+  total * : DeductionsTotal
+
+}
+Deductions *-- Total  :  subtotals
+Deductions *-- DeductionsBreakdown  :  breakdown
+Deductions *-- Total  :  totals
+Deductions -- DeductionsTotal  :  total
+
+class DeductionsBreakdown {
+  current_amount  : number
+  description  : string
+  iso_currency_code  : string
+  unofficial_currency_code  : string
+  ytd_amount  : number
+
+}
+
+class DeductionsTotal {
+  current_amount  : number
+  iso_currency_code  : string
+  unofficial_currency_code  : string
+  ytd_amount  : number
+
+}
+
+class Total {
+  canonical_description  : TotalCanonicalDescription
+  description  : string
+  current_pay  : Pay
+  ytd_pay  : Pay
+
+}
+Total -- TotalCanonicalDescription  :  canonical_description
+Total -- Pay  :  current_pay
+Total -- Pay  :  ytd_pay
+
+class Pay {
+  amount  : number
+  currency  : string
+
+}
+
+class Earnings {
+  subtotals  : array[] of EarningsTotal
+  totals  : array[] of EarningsTotal
+  breakdown  : array[] of EarningsBreakdown
+  total  : EarningsTotal
+
+}
+Earnings *-- EarningsTotal  :  subtotals
+Earnings *-- EarningsTotal  :  totals
+Earnings *-- EarningsBreakdown  :  breakdown
+Earnings -- EarningsTotal  :  total
+
+class EarningsBreakdown {
+  canonical_description  : EarningsBreakdownCanonicalDescription
+  current_amount  : number
+  description  : string
+  hours  : number
+  iso_currency_code  : string
+  rate  : number
+  unofficial_currency_code  : string
+  ytd_amount  : number
+
+}
+EarningsBreakdown -- EarningsBreakdownCanonicalDescription  :  canonical_description
+
+class EarningsTotal {
+  current_amount  : number
+  current_pay  : Pay
+  ytd_pay  : Pay
+  hours  : number
+  iso_currency_code  : string
+  unofficial_currency_code  : string
+  ytd_amount  : number
+
+}
+EarningsTotal -- Pay  :  current_pay
+EarningsTotal -- Pay  :  ytd_pay
+
+class EmploymentDetails {
+  annual_salary  : Pay
+  hire_date  : date
+
+}
+EmploymentDetails -- Pay  :  annual_salary
+
+class NetPay {
+  current_amount  : number
+  description  : string
+  iso_currency_code  : string
+  unofficial_currency_code  : string
+  ytd_amount  : number
+  total  : Total
+
+}
+NetPay -- Total  :  total
+
+class PaystubDetails {
+  pay_period_start_date  : date
+  pay_period_end_date  : date
+  pay_date  : date
+  paystub_provider  : string
+  pay_frequency  : PaystubPayFrequency
+
+}
+PaystubDetails -- PaystubPayFrequency  :  pay_frequency
+
+class IncomeBreakdown {
+  type * : IncomeBreakdownType
+  rate * : number
+  hours * : number
+  total * : number
+
+}
+IncomeBreakdown -- IncomeBreakdownType  :  type
+
+class Employee {
+  address * : PaystubAddress
+  name * : string
+  marital_status  : string
+  taxpayer_id  : TaxpayerID
+
+}
+Employee -- PaystubAddress  :  address
+Employee -- TaxpayerID  :  taxpayer_id
+
+class TaxpayerID {
+  id_type  : string
+  id_mask  : string
+  last_4_digits  : string
+
+}
+
+class PaystubEmployer {
+  address  : PaystubAddress
+  name * : string
+
+}
+PaystubEmployer -- PaystubAddress  :  address
+
+class PaystubAddress {
+  city  : string
+  country  : string
+  postal_code  : string
+  region  : string
+  street  : string
+  line1  : string
+  line2  : string
+  state_code  : string
+
+}
+
+class PayPeriodDetails {
+  check_amount  : number
+  distribution_breakdown  : array[] of DistributionBreakdown
+  end_date  : date
+  gross_earnings  : number
+  pay_date  : date
+  pay_frequency  : enum
+  pay_day  : date
+  start_date  : date
+
+}
+PayPeriodDetails *-- DistributionBreakdown  :  distribution_breakdown
+
+class DistributionBreakdown {
+  account_name  : string
+  bank_name  : string
+  current_amount  : number
+  iso_currency_code  : string
+  mask  : string
+  type  : string
+  unofficial_currency_code  : string
+  current_pay  : Pay
+
+}
+DistributionBreakdown -- Pay  :  current_pay
+
+class PaystubDeduction {
+  type * : string
+  is_pretax * : boolean
+  total * : number
+
+}
+
+class PaystubYTDDetails {
+  gross_earnings  : number
+  net_earnings  : number
+
+}
+
+class PaystubVerification {
+  verification_status * : PaystubVerificationStatus
+  verification_attributes * : array[] of VerificationAttribute
+
+}
+PaystubVerification -- PaystubVerificationStatus  :  verification_status
+PaystubVerification *-- VerificationAttribute  :  verification_attributes
+
+class VerificationAttribute {
+  type * : enum
+
+}
+
+class IncomeVerificationDocumentsDownloadRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id  : string
+  access_token  : AccessTokenNullable
+  document_id  : string
+
+}
+IncomeVerificationDocumentsDownloadRequest -- APIClientID  :  client_id
+IncomeVerificationDocumentsDownloadRequest -- APISecret  :  secret
+IncomeVerificationDocumentsDownloadRequest -- AccessTokenNullable  :  access_token
+
+class IncomeVerificationTaxformsGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id  : string
+  access_token  : AccessTokenNullable
+
+}
+IncomeVerificationTaxformsGetRequest -- APIClientID  :  client_id
+IncomeVerificationTaxformsGetRequest -- APISecret  :  secret
+IncomeVerificationTaxformsGetRequest -- AccessTokenNullable  :  access_token
+
+class IncomeVerificationTaxformsGetResponse {
+  request_id  : RequestID
+  document_metadata * : array[] of DocumentMetadata
+  taxforms * : array[] of Taxform
+  error  : PlaidError
+
+}
+IncomeVerificationTaxformsGetResponse -- RequestID  :  request_id
+IncomeVerificationTaxformsGetResponse *-- DocumentMetadata  :  document_metadata
+IncomeVerificationTaxformsGetResponse *-- Taxform  :  taxforms
+IncomeVerificationTaxformsGetResponse -- PlaidError  :  error
+
+class Taxform {
+  doc_id  : string
+  document_type * : string
+  w2  : W2
+
+}
+Taxform -- W2  :  w2
+
+class W2 {
+  employer  : PaystubEmployer
+  employee  : Employee
+  tax_year  : string
+  employer_id_number  : string
+  wages_tips_other_comp  : string
+  federal_income_tax_withheld  : string
+  social_security_wages  : string
+  social_security_tax_withheld  : string
+  medicare_wages_and_tips  : string
+  medicare_tax_withheld  : string
+  social_security_tips  : string
+  allocated_tips  : string
+  box_9  : string
+  dependent_care_benefits  : string
+  nonqualified_plans  : string
+  box_12  : array[] of W2Box12
+  statutory_employee  : string
+  retirement_plan  : string
+  third_party_sick_pay  : string
+  other  : string
+  state_and_local_wages  : array[] of W2StateAndLocalWages
+
+}
+W2 -- PaystubEmployer  :  employer
+W2 -- Employee  :  employee
+W2 *-- W2Box12  :  box_12
+W2 *-- W2StateAndLocalWages  :  state_and_local_wages
+
+class W2Box12 {
+  code  : string
+  amount  : string
+
+}
+
+class W2StateAndLocalWages {
+  state  : string
+  employer_state_id_number  : string
+  state_wages_tips  : string
+  state_income_tax  : string
+  local_wages_tips  : string
+  local_income_tax  : string
+  locality_name  : string
+
+}
+
+class IncomeVerificationWebhookStatus {
+  id * : string
+
+}
+
+class EmploymentVerificationGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+
+}
+EmploymentVerificationGetRequest -- APIClientID  :  client_id
+EmploymentVerificationGetRequest -- APISecret  :  secret
+EmploymentVerificationGetRequest -- AccessToken  :  access_token
+
+class EmploymentVerificationGetResponse {
+  employments * : array[] of EmploymentVerification
+  error  : PlaidError
+  request_id * : RequestID
+
+}
+EmploymentVerificationGetResponse *-- EmploymentVerification  :  employments
+EmploymentVerificationGetResponse -- PlaidError  :  error
+EmploymentVerificationGetResponse -- RequestID  :  request_id
+
+class EmploymentVerification {
+  status  : EmploymentVerificationStatus
+  start_date  : date
+  end_date  : date
+  employer  : EmployerVerification
+  title  : string
+  platform_ids  : PlatformIds
+
+}
+EmploymentVerification -- EmploymentVerificationStatus  :  status
+EmploymentVerification -- EmployerVerification  :  employer
+EmploymentVerification -- PlatformIds  :  platform_ids
+
+class EmployerVerification {
+  name  : string
+
+}
+
+class PlatformIds {
+  employee_id  : string
+  payroll_id  : string
+  position_id  : string
+
+}
+
+class AssetReportTransaction {
+  date_transacted  : string
+
+}
+TransactionBase <|-- AssetReportTransaction
+
+class HealthIncident {
+  start_date * : date-time
+  end_date  : date-time
+  title * : string
+  incident_updates * : array[] of IncidentUpdate
+
+}
+HealthIncident *-- IncidentUpdate  :  incident_updates
+
+class IncidentUpdate {
+  description  : string
+  status  : enum
+  updated_date  : date-time
+
+}
+
+class DepositSwitchAltCreateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  target_account * : DepositSwitchTargetAccount
+  target_user * : DepositSwitchTargetUser
+  options  : DepositSwitchCreateRequestOptions
+  country_code  : enum
+
+}
+DepositSwitchAltCreateRequest -- APIClientID  :  client_id
+DepositSwitchAltCreateRequest -- APISecret  :  secret
+DepositSwitchAltCreateRequest -- DepositSwitchTargetAccount  :  target_account
+DepositSwitchAltCreateRequest -- DepositSwitchTargetUser  :  target_user
+DepositSwitchAltCreateRequest -- DepositSwitchCreateRequestOptions  :  options
+
+class DepositSwitchAltCreateResponse {
+  deposit_switch_id * : string
+  request_id * : RequestID
+
+}
+DepositSwitchAltCreateResponse -- RequestID  :  request_id
+
+class DepositSwitchTargetAccount {
+  account_number * : string
+  routing_number * : string
+  account_name * : string
+  account_subtype * : enum
+
+}
+
+class DepositSwitchTargetUser {
+  given_name * : string
+  family_name * : string
+  phone * : string
+  email * : string
+  address  : DepositSwitchAddressData
+  tax_payer_id  : string
+
+}
+DepositSwitchTargetUser -- DepositSwitchAddressData  :  address
+
+class DepositSwitchAddressData {
+  city * : string
+  region * : string
+  street * : string
+  postal_code * : string
+  country * : string
+
+}
+
+class SandboxBankTransferFireWebhookRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  webhook * : string
+
+}
+SandboxBankTransferFireWebhookRequest -- APIClientID  :  client_id
+SandboxBankTransferFireWebhookRequest -- APISecret  :  secret
+
+class SandboxBankTransferFireWebhookResponse {
+  request_id * : RequestID
+
+}
+SandboxBankTransferFireWebhookResponse -- RequestID  :  request_id
+
+class Application {
+  application_id * : ApplicationID
+  name * : string
+  created_at * : date
+  logo_url * : string
+  application_url * : string
+  reason_for_access * : string
+
+}
+Application -- ApplicationID  :  application_id
+
+class ApplicationGetRequest {
+  client_id * : APIClientID
+  secret * : APISecret
+  application_id * : ApplicationID
+
+}
+ApplicationGetRequest -- APIClientID  :  client_id
+ApplicationGetRequest -- APISecret  :  secret
+ApplicationGetRequest -- ApplicationID  :  application_id
+
+class ApplicationGetResponse {
+  request_id * : RequestID
+  application * : Application
+
+}
+ApplicationGetResponse -- RequestID  :  request_id
+ApplicationGetResponse -- Application  :  application
+
+class ProductAccess {
+  statements  : boolean
+  identity  : boolean
+  auth  : boolean
+  transactions  : boolean
+
+}
+
+class AccountAccess {
+  unique_id * : string
+  authorized  : boolean
+  account_product_access  : AccountProductAccessNullable
+
+}
+AccountAccess -- AccountProductAccessNullable  :  account_product_access
+
+class AccountProductAccessNullable {
+
+}
+AccountProductAccess <|-- AccountProductAccessNullable
+
+class AccountProductAccess {
+  account_data  : boolean
+  statements  : boolean
+  tax_documents  : boolean
+
+}
+
+class ScopesNullable {
+
+}
+Scopes <|-- ScopesNullable
+
+class Scopes {
+  product_access  : ProductAccess
+  accounts  : array[] of AccountAccess
+  new_accounts  : boolean
+
+}
+Scopes -- ProductAccess  :  product_access
+Scopes *-- AccountAccess  :  accounts
+
+class RequestedScopes {
+  required_product_access * : ProductAccess
+  optional_product_access * : ProductAccess
+  account_filters  : AccountFilter
+  account_selection_cardinality * : AccountSelectionCardinality
+
+}
+RequestedScopes -- ProductAccess  :  required_product_access
+RequestedScopes -- ProductAccess  :  optional_product_access
+RequestedScopes -- AccountFilter  :  account_filters
+RequestedScopes -- AccountSelectionCardinality  :  account_selection_cardinality
+
+class ItemApplicationScopesUpdateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  application_id * : ApplicationID
+  scopes * : Scopes
+  state  : ScopesState
+  context * : ScopesContext
+
+}
+ItemApplicationScopesUpdateRequest -- APIClientID  :  client_id
+ItemApplicationScopesUpdateRequest -- APISecret  :  secret
+ItemApplicationScopesUpdateRequest -- AccessToken  :  access_token
+ItemApplicationScopesUpdateRequest -- ApplicationID  :  application_id
+ItemApplicationScopesUpdateRequest -- Scopes  :  scopes
+ItemApplicationScopesUpdateRequest -- ScopesState  :  state
+ItemApplicationScopesUpdateRequest -- ScopesContext  :  context
+
+class ItemApplicationScopesUpdateResponse {
+  request_id * : RequestID
+
+}
+ItemApplicationScopesUpdateResponse -- RequestID  :  request_id
+
+class ItemApplicationListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token  : AccessTokenNullable
+
+}
+ItemApplicationListRequest -- APIClientID  :  client_id
+ItemApplicationListRequest -- APISecret  :  secret
+ItemApplicationListRequest -- AccessTokenNullable  :  access_token
+
+class ItemApplicationListResponse {
+  request_id  : RequestID
+  applications * : array[] of ConnectedApplication
+
+}
+ItemApplicationListResponse -- RequestID  :  request_id
+ItemApplicationListResponse *-- ConnectedApplication  :  applications
+
+class ConnectedApplication {
+  application_id * : ApplicationID
+  name * : string
+  logo * : string
+  logo_url * : string
+  application_url * : string
+  reason_for_access * : string
+  created_at * : date
+  product_data_types * : array[] of strings
+  scopes  : ScopesNullable
+  requested_scopes  : RequestedScopes
+
+}
+ConnectedApplication -- ApplicationID  :  application_id
+ConnectedApplication -- ScopesNullable  :  scopes
+ConnectedApplication -- RequestedScopes  :  requested_scopes
+
+class AccountFilter {
+  depository  : AccountFilterSubtypes
+  credit  : AccountFilterSubtypes
+  loan  : AccountFilterSubtypes
+  investment  : AccountFilterSubtypes
+
+}
+AccountFilter -- AccountFilterSubtypes  :  depository
+AccountFilter -- AccountFilterSubtypes  :  credit
+AccountFilter -- AccountFilterSubtypes  :  loan
+AccountFilter -- AccountFilterSubtypes  :  investment
+
+class SandboxIncomeFireWebhookRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  income_verification_id * : string
+  item_id * : string
+  webhook * : string
+  verification_status * : enum
+
+}
+SandboxIncomeFireWebhookRequest -- APIClientID  :  client_id
+SandboxIncomeFireWebhookRequest -- APISecret  :  secret
+
+class SandboxIncomeFireWebhookResponse {
+  request_id * : RequestID
+
+}
+SandboxIncomeFireWebhookResponse -- RequestID  :  request_id
+
+class ItemApplicationListUserAuth {
+  user_id  : string
+  fi_username_hash  : string
+
+}
+
+class SignalEvaluateRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  access_token * : AccessToken
+  account_id * : string
+  client_transaction_id * : string
+  amount * : number
+  user_present  : boolean
+  client_user_id  : string
+  user  : SignalUser
+  device  : SignalDevice
+
+}
+SignalEvaluateRequest -- APIClientID  :  client_id
+SignalEvaluateRequest -- APISecret  :  secret
+SignalEvaluateRequest -- AccessToken  :  access_token
+SignalEvaluateRequest -- SignalUser  :  user
+SignalEvaluateRequest -- SignalDevice  :  device
+
+class SignalUser {
+  name  : SignalPersonName
+  phone_number  : string
+  email_address  : string
+  address  : SignalAddressData
+
+}
+SignalUser -- SignalPersonName  :  name
+SignalUser -- SignalAddressData  :  address
+
+class SignalPersonName {
+  prefix  : string
+  given_name  : string
+  middle_name  : string
+  family_name  : string
+  suffix  : string
+
+}
+
+class SignalAddressData {
+  city  : string
+  region  : string
+  street  : string
+  postal_code  : string
+  country  : string
+
+}
+
+class SignalDevice {
+  ip_address  : string
+  user_agent  : string
+
+}
+
+class SignalEvaluateResponse {
+  request_id * : RequestID
+  scores * : SignalScores
+  core_attributes  : SignalEvaluateCoreAttributes
+
+}
+SignalEvaluateResponse -- RequestID  :  request_id
+SignalEvaluateResponse -- SignalScores  :  scores
+SignalEvaluateResponse -- SignalEvaluateCoreAttributes  :  core_attributes
+
+class SignalScores {
+  customer_initiated_return_risk  : CustomerInitiatedReturnRisk
+  bank_initiated_return_risk  : BankInitiatedReturnRisk
+
+}
+SignalScores -- CustomerInitiatedReturnRisk  :  customer_initiated_return_risk
+SignalScores -- BankInitiatedReturnRisk  :  bank_initiated_return_risk
+
+class CustomerInitiatedReturnRisk {
+  score * : SignalScore
+  risk_tier * : CustomerInitiatedRiskTier
+
+}
+CustomerInitiatedReturnRisk -- SignalScore  :  score
+CustomerInitiatedReturnRisk -- CustomerInitiatedRiskTier  :  risk_tier
+
+class BankInitiatedReturnRisk {
+  score * : SignalScore
+  risk_tier * : BankInitiatedRiskTier
+
+}
+BankInitiatedReturnRisk -- SignalScore  :  score
+BankInitiatedReturnRisk -- BankInitiatedRiskTier  :  risk_tier
+
+class SignalEvaluateCoreAttributes {
+  unauthorized_transactions_count_7d  : integer
+  unauthorized_transactions_count_30d  : integer
+  unauthorized_transactions_count_60d  : integer
+  unauthorized_transactions_count_90d  : integer
+  nsf_overdraft_transactions_count_7d  : integer
+  nsf_overdraft_transactions_count_30d  : integer
+  nsf_overdraft_transactions_count_60d  : integer
+  nsf_overdraft_transactions_count_90d  : integer
+  days_since_first_plaid_connection  : integer
+  plaid_connections_count_7d  : integer
+  plaid_connections_count_30d  : integer
+  total_plaid_connections_count  : integer
+  is_savings_or_money_market_account  : boolean
+  total_credit_transactions_amount_10d  : number
+  total_debit_transactions_amount_10d  : number
+  p50_credit_transactions_amount_28d  : number
+  p50_debit_transactions_amount_28d  : number
+  p95_credit_transactions_amount_28d  : number
+  p95_debit_transactions_amount_28d  : number
+  days_with_negative_balance_count_90d  : integer
+  p90_eod_balance_30d  : number
+  p90_eod_balance_60d  : number
+  p90_eod_balance_90d  : number
+  p10_eod_balance_30d  : number
+  p10_eod_balance_60d  : number
+  p10_eod_balance_90d  : number
+  available_balance  : number
+  current_balance  : number
+  balance_last_updated  : date-time
+  phone_change_count_28d  : integer
+  phone_change_count_90d  : integer
+  email_change_count_28d  : integer
+  email_change_count_90d  : integer
+  address_change_count_28d  : integer
+  address_change_count_90d  : integer
+
+}
+
+class SignalDecisionReportRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  client_transaction_id * : string
+  initiated * : boolean
+  days_funds_on_hold  : integer
+
+}
+SignalDecisionReportRequest -- APIClientID  :  client_id
+SignalDecisionReportRequest -- APISecret  :  secret
+
+class SignalDecisionReportResponse {
+  request_id * : RequestID
+
+}
+SignalDecisionReportResponse -- RequestID  :  request_id
+
+class SignalReturnReportRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  client_transaction_id * : string
+  return_code * : string
+
+}
+SignalReturnReportRequest -- APIClientID  :  client_id
+SignalReturnReportRequest -- APISecret  :  secret
+
+class SignalReturnReportResponse {
+  request_id * : RequestID
+
+}
+SignalReturnReportResponse -- RequestID  :  request_id
+
+class SandboxOauthSelectAccountsRequest {
+  oauth_state_id * : string
+  accounts * : array[] of strings
+
+}
+
+class SandboxOauthSelectAccountsResponse {
+
+}
+
+class NewAccountsAvailableWebhook {
+  webhook_type  : string
+  webhook_code  : string
+  item_id  : ItemId
+  error  : PlaidError
+
+}
+NewAccountsAvailableWebhook -- ItemId  :  item_id
+NewAccountsAvailableWebhook -- PlaidError  :  error
+
+class WalletGetRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  wallet_id * : string
+
+}
+WalletGetRequest -- APIClientID  :  client_id
+WalletGetRequest -- APISecret  :  secret
+
+class WalletGetResponse {
+  wallet_id * : string
+  balance * : WalletBalance
+  request_id * : RequestID
+
+}
+WalletGetResponse -- WalletBalance  :  balance
+WalletGetResponse -- RequestID  :  request_id
+
+class WalletBalance {
+  iso_currency_code * : string
+  current * : number
+
+}
+
+class WalletTransactionExecuteRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  idempotency_key * : WalletTransactionIdempotencyKey
+  wallet_id * : string
+  counterparty * : WalletTransactionCounterparty
+  amount * : WalletTransactionAmount
+  reference * : string
+
+}
+WalletTransactionExecuteRequest -- APIClientID  :  client_id
+WalletTransactionExecuteRequest -- APISecret  :  secret
+WalletTransactionExecuteRequest -- WalletTransactionIdempotencyKey  :  idempotency_key
+WalletTransactionExecuteRequest -- WalletTransactionCounterparty  :  counterparty
+WalletTransactionExecuteRequest -- WalletTransactionAmount  :  amount
+
+class WalletTransactionCounterparty {
+  name * : string
+  numbers * : WalletTransactionCounterpartyNumbers
+
+}
+WalletTransactionCounterparty -- WalletTransactionCounterpartyNumbers  :  numbers
+
+class WalletTransactionCounterpartyNumbers {
+  bacs * : WalletTransactionCounterpartyBACS
+
+}
+WalletTransactionCounterpartyNumbers -- WalletTransactionCounterpartyBACS  :  bacs
+
+class WalletTransactionCounterpartyBACS {
+
+}
+RecipientBACS <|-- WalletTransactionCounterpartyBACS
+
+class WalletTransactionAmount {
+  iso_currency_code * : enum
+  value * : number
+
+}
+
+class WalletTransactionExecuteResponse {
+  transaction_id * : string
+  status * : WalletTransactionStatus
+  request_id * : RequestID
+
+}
+WalletTransactionExecuteResponse -- WalletTransactionStatus  :  status
+WalletTransactionExecuteResponse -- RequestID  :  request_id
+
+class WalletTransactionsListRequest {
+  client_id  : APIClientID
+  secret  : APISecret
+  wallet_id * : string
+  cursor  : string
+  count  : integer
+
+}
+WalletTransactionsListRequest -- APIClientID  :  client_id
+WalletTransactionsListRequest -- APISecret  :  secret
+
+class WalletTransactionsListResponse {
+  transactions * : array[] of WalletTransaction
+  next_cursor  : string
+  request_id * : RequestID
+
+}
+WalletTransactionsListResponse *-- WalletTransaction  :  transactions
+WalletTransactionsListResponse -- RequestID  :  request_id
+
+class WalletTransaction {
+  transaction_id * : string
+  reference * : string
+  type * : enum
+  amount * : WalletTransactionAmount
+  counterparty * : WalletTransactionCounterparty
+  status * : WalletTransactionStatus
+  created_at * : date-time
+
+}
+WalletTransaction -- WalletTransactionAmount  :  amount
+WalletTransaction -- WalletTransactionCounterparty  :  counterparty
+WalletTransaction -- WalletTransactionStatus  :  status
+@enduml
